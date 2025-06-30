@@ -40,21 +40,24 @@ jobs:
               cd $WORK_DIR
             fi
 
-            # Clone if not exists
-            if [ ! -d ".git" ]; then
-              git clone https://github.com/zoltanpal/pow.palzoltan.net.git .
-              git checkout ${{ github.ref_name }}
-            fi
+            echo "working directory"
+            echo $WORK_DIR
+          
+            # # Clone if not exists
+            # if [ ! -d ".git" ]; then
+            #   git clone https://github.com/zoltanpal/pow.palzoltan.net.git .
+            #   git checkout ${{ github.ref_name }}
+            # fi
 
-            # Pull latest changes
-            git fetch origin
-            git reset --hard origin/${{ github.ref_name }}
-            git clean -fd
-            git checkout ${{ github.ref_name }}
+            # # Pull latest changes
+            # git fetch origin
+            # git reset --hard origin/${{ github.ref_name }}
+            # git clean -fd
+            # git checkout ${{ github.ref_name }}
 
-            # Set up Node.js environment (assumes Node and npm are installed)
-            #export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
+            # # Set up Node.js environment (assumes Node and npm are installed)
+            # #export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
 
-            # Install dependencies and build
-            npm install
-            npm run build
+            # # Install dependencies and build
+            # npm install
+            # npm run build
