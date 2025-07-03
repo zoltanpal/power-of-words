@@ -26,7 +26,6 @@ type TrendsData = {
 };
 
 export default function Trends() {
-
   const [range, setRange] = useState<{ from: Date; to: Date }>(() => {
     const to = new Date();
     const from = new Date();
@@ -35,20 +34,11 @@ export default function Trends() {
   });
 
   const [freeText, setFreeText] = useState<string | undefined>();
-  
-  const [loading, setLoading] = useState({
-    source: false,
-    feed_date: false,
-  });
-
+  const [loading, setLoading] = useState({ source: false, feed_date: false });
   const [trends, setTrends] = useState<{
     source: TrendsData | null;
     feed_date: TrendsData | null;
-  }>({
-    source: null,
-    feed_date: null,
-  });
-
+  }>({ source: null, feed_date: null });
 
   const fetchData = async (groupBy: "source" | "feed_date") => {
     const start = range.from.toISOString().split("T")[0];
@@ -83,64 +73,72 @@ export default function Trends() {
     fetchData("source");
     fetchData("feed_date");
   };
-    useEffect(() => {
-    fetchData("source");
-    fetchData("feed_date");
-    }, []);
+
+  useEffect(() => {
+    onSearch();
+  }, []);
 
   return (
-    <div>
-      <div className="flex gap-2">
-        <div className="flex">
-            <DateRangePicker value={range} onChange={(r) => setRange(r)} />
+    <div className="space-y-6 px-2 md:px-4">
+      {/* Filters */}
+      <div className="w-full flex flex-wrap items-end justify-start gap-x-4 gap-y-3">
+        <div className="min-w-[200px]">
+          <DateRangePicker value={range} onChange={(r) => setRange(r)} />
         </div>
-        <div className="flex">
+
+        <div className="min-w-[200px]">
           <Input
-              id="free-text"
-              value={freeText}
-              onChange={(e) => setFreeText(e.target.value)}
-              placeholder="e.g. economy, Ukraine, AI"
-              className="w-56"
-            />
+            id="free-text"
+            value={freeText}
+            onChange={(e) => setFreeText(e.target.value)}
+            placeholder="e.g. economy, Ukraine, AI"
+            className="w-full"
+          />
         </div>
-        <div className="flex">
-            <Button size="sm" onClick={onSearch} className="text-white bg-blue-500 hover:bg-blue-600">
-                 <SearchIcon /> Search
-            </Button>
+
+        <div>
+          <Button
+            size="sm"
+            onClick={onSearch}
+            className="text-white bg-blue-500 hover:bg-blue-600"
+          >
+            <SearchIcon className="mr-1 w-4 h-4" />
+            Search
+          </Button>
         </div>
       </div>
 
-      <Separator className="my-4" />
+      <Separator />
 
-      <div className="mt-4 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <Card className="gap-2">
-                <CardContent className="px-2 mt-0 pt-0">
-                    {loading.source ? (
-                    <Loading text="" />
-                    ) : trends.source ? (
-                        <>
-                           <SentimentBySourceChart data={trends.source} />
-                        </>
-                                            
-                    ) : (
-                    <p className="text-muted-foreground text-sm">No data loaded.</p>
-                    )}
-                </CardContent>
-            </Card>
+      {/* Charts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardContent className="p-4">
+            {loading.source ? (
+              <Loading text="" />
+            ) : trends.source ? (
+              <SentimentBySourceChart data={trends.source} />
+            ) : (
+              <p className="text-muted-foreground text-sm">No data loaded.</p>
+            )}
+          </CardContent>
+        </Card>
 
-            <Card className="gap-2">
-                <CardContent className="px-2 mt-0 pt-0">
-                    {loading.feed_date ? (
-                    <Loading text="" />
-                    ) : trends.feed_date ? (
-                        <SentimentOverTimeChart startDate={range.from.toISOString().split("T")[0]} endDate={range.to.toISOString().split("T")[0]} data={trends.feed_date} />
-                    ) : (
-                    <p className="text-muted-foreground text-sm">No data loaded.</p>
-                    )}
-                </CardContent>
-            </Card>
-        </div>
+        <Card>
+          <CardContent className="p-4">
+            {loading.feed_date ? (
+              <Loading text="" />
+            ) : trends.feed_date ? (
+              <SentimentOverTimeChart
+                startDate={range.from.toISOString().split("T")[0]}
+                endDate={range.to.toISOString().split("T")[0]}
+                data={trends.feed_date}
+              />
+            ) : (
+              <p className="text-muted-foreground text-sm">No data loaded.</p>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

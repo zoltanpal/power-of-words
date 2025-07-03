@@ -1,16 +1,14 @@
 import {
   Mail,
-  CogIcon,
   Target,
   RssIcon,
   TrendingUpIcon,
-  RadioReceiverIcon,
+  //RadioReceiverIcon,
   SearchIcon,
   InfoIcon,
   LinkIcon,
-  ScaleIcon,
+  //ScaleIcon,
   AlertTriangleIcon,
-  WrenchIcon,
   ZapIcon
 } from "lucide-react";
 
@@ -33,13 +31,13 @@ const mainMenuItems = [
 const analyticsMenuItems = [
   { title: "Trends", url: "/trends", icon: TrendingUpIcon },
   { title: "Source Correlation", url: "/correlation_between_sources", icon: LinkIcon },
-  { title: "Bias Detection", url: "/bias_detection", icon: ScaleIcon },
+  //{ title: "Bias Detection", url: "/bias_detection", icon: ScaleIcon },
   { title: "Extreme Detection", url: "/extreme_detection", icon: AlertTriangleIcon },
 ];
 
 const liveAnalyticsMenuItems = [
   { title: "Search by Keyword", url: "/live_analysis_keyword", icon: SearchIcon },
-  { title: "Monitor RSS Feeds", url: "/live_analysis_rss", icon: RadioReceiverIcon }
+  //{ title: "Monitor RSS Feeds", url: "/live_analysis_rss", icon: RadioReceiverIcon }
 ];
 
 const footerMenuItems = [
@@ -75,6 +73,7 @@ export function AppSidebar() {
           <SidebarMenuGroup items={footerMenuItems}  />
         </SidebarGroup>
       </SidebarFooter>
+      <div className="text-xs p-2 text-right">(beta)</div>
     </Sidebar>
   );
 } 

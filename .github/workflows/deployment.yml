@@ -32,14 +32,15 @@ jobs:
             # Determine working directory
             if [ "$ENV" == "prod" ]; then
               echo "Deploying to production..."
-              WORK_DIR=${{ secrets.PROD_CLIENT_DEPLOYMENT_PATH }}
-              cd $WORK_DIR
+              WORK_DIR=${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}
+              cd ${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}
             else
               echo "Deploying to development..."
-              WORK_DIR=${{ secrets.DEV_CLIENT_DEPLOYMENT_PATH }}
-              cd $WORK_DIR
+              WORK_DIR=${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
+              cd ${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
             fi
 
+            
             # Clone if not exists
             if [ ! -d ".git" ]; then
               git clone https://github.com/zoltanpal/pow.palzoltan.net.git .

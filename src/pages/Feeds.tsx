@@ -15,7 +15,6 @@ const API_HOST = import.meta.env.VITE_API_HOST;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
 export default function Feeds() {
-
   const [loadingFeeds, setLoadingFeeds] = useState(false);
   const [apiData, setApiData] = useState<any>(null);
 
@@ -37,8 +36,8 @@ export default function Feeds() {
 
   const fetchFeeds = async () => {
     if (!range.from || !range.to) {
-      alert("Please select date range")
-      return
+      alert("Please select date range");
+      return;
     }
 
     setLoadingFeeds(true);
@@ -64,11 +63,8 @@ export default function Feeds() {
 
     try {
       const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${API_TOKEN}`,
-        },
+        headers: { Authorization: `Bearer ${API_TOKEN}` },
       });
-
       const result = await response.json();
       setApiData(result);
     } catch (err) {
@@ -79,24 +75,28 @@ export default function Feeds() {
   };
 
   return (
-    <div>
-      <div className="flex gap-2">
-        <div className="flex">
+    <div className="space-y-6 px-2 md:px-4">
+      {/* Filter Section */}
+      <div className="flex flex-wrap justify-start items-end gap-2">
+        <div className="min-w-[200px]">
           <DateRangePicker value={range} onChange={(r) => setRange(r)} />
         </div>
-        <div className="flex">
+
+        <div className="min-w-[150px]">
           <SourceSelectorMulti value={sources} onChange={setSources} />
         </div>
-        <div className="flex">
-        <Input
+
+        <div className="min-w-[200px]">
+          <Input
             id="free-text"
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
             placeholder="e.g. economy, Ukraine, AI"
-            className="w-56"
+            className="w-full"
           />
         </div>
-        <div className="flex">
+
+        <div>
           <Button
             size="sm"
             onClick={() => {
@@ -105,13 +105,15 @@ export default function Feeds() {
             }}
             className="text-white bg-blue-500 hover:bg-blue-600"
           >
-            <SearchIcon /> Search
+            <SearchIcon className="mr-1 w-4 h-4" />
+            Search
           </Button>
         </div>
       </div>
 
-      <Separator className="my-4" />
+      <Separator />
 
+      {/* Results */}
       <div>
         {apiData?.total > itemsPerPage && (
           <CustomPagination

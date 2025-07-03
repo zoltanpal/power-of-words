@@ -102,7 +102,7 @@ export default function CorrelationBetweenSources() {
 
   return (
     <>
-      <p className="text-muted-foreground mb-3">
+      <p className="text-muted-foreground mb-3 text-justify">
         This heatmap shows how similarly different news sources talk about selected topics over time.
         The correlation is calculated using monthly average sentiment scores.
       </p>
