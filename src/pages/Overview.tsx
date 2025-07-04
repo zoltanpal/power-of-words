@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-
 } from "@/components/ui/card";
 
 const API_HOST = import.meta.env.VITE_API_HOST;
@@ -33,9 +32,9 @@ type SentimentData = {
 };
 
 type mostCommonWordData = {
-    name: string,
-    weight: number
-}
+  name: string;
+  weight: number;
+};
 
 type TopFeedItem = {
   title: string;
@@ -44,42 +43,34 @@ type TopFeedItem = {
 };
 
 export default function Overview() {
-
   const [range, setRange] = useState<"7" | "30">("7");
-  const { start, end } = getDateRange(Number(range))
-  const [sentiments, setSentiments] = useState<SentimentData | null>(null);
+  const { start, end } = getDateRange(Number(range));
 
+  const [sentiments, setSentiments] = useState<SentimentData | null>(null);
+  const [topFeeds, setTopFeeds] = useState<{ positive: TopFeedItem[]; negative: TopFeedItem[] }>({
+    positive: [],
+    negative: [],
+  });
+
+  const [mostCommonWords, setMostCommonWords] = useState<mostCommonWordData[]>([]);
   const [loadingSentiments, setLoadingSentiments] = useState({
     positive: false,
     negative: false,
     neutral: false,
   });
-
-  const [topFeeds, setTopFeeds] = useState<{
-    positive: TopFeedItem[];
-    negative: TopFeedItem[];
-  }>({
-    positive: [],
-    negative: [],
-  });
-
-  const [mostCommonWords, setMostCommonWords] = useState<mostCommonWordData[]>([])
-  const [loadingMostCommonWords, setLoadingMostCommonWords] = useState(false)
-
   const [loadingFeeds, setLoadingFeeds] = useState({
     positive: false,
     negative: false,
   });
+  const [loadingMostCommonWords, setLoadingMostCommonWords] = useState(false);
 
   const fetchSentiments = async () => {
-    const { start, end } = getDateRange(Number(range));
-    const url = `${API_HOST}/count_sentiments?start_date=${start}&end_date=${end}`;
     setLoadingSentiments({ positive: true, negative: true, neutral: true });
-
     try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
-      });
+      const response = await fetch(
+        `${API_HOST}/count_sentiments?start_date=${start}&end_date=${end}`,
+        { headers: { Authorization: `Bearer ${API_TOKEN}` } }
+      );
       const result = await response.json();
       setSentiments(result);
     } catch (err) {
@@ -90,17 +81,14 @@ export default function Overview() {
   };
 
   const fetchTopFeeds = async (sentiment: "positive" | "negative") => {
-    const { start, end } = getDateRange(Number(range));
-    const url = `${API_HOST}/top_feeds?start_date=${start}&end_date=${end}&pos_neg=${sentiment}`;
     setLoadingFeeds((prev) => ({ ...prev, [sentiment]: true }));
-
     try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
-      });
+      const response = await fetch(
+        `${API_HOST}/top_feeds?start_date=${start}&end_date=${end}&pos_neg=${sentiment}`,
+        { headers: { Authorization: `Bearer ${API_TOKEN}` } }
+      );
       const result = await response.json();
       setTopFeeds((prev) => ({ ...prev, [sentiment]: result }));
-      console.log(result)
     } catch (err) {
       console.error(`Error fetching ${sentiment} feeds:`, err);
     } finally {
@@ -108,27 +96,21 @@ export default function Overview() {
     }
   };
 
-  const fetchMostCommonWords = async() => {
-    const { start, end } = getDateRange(Number(range));
-    const url = `${API_HOST}/most_common_words?start_date=${start}&end_date=${end}&nm_common=40`;
-    setLoadingMostCommonWords(true)
-
+  const fetchMostCommonWords = async () => {
+    setLoadingMostCommonWords(true);
     try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
-      });
-      const result: [string, number][] = await response.json()
-      const transformed = result.map(([word, count]) => ({
-        name: word,
-        weight: count,
-      }))
-      setMostCommonWords(transformed)
+      const response = await fetch(
+        `${API_HOST}/most_common_words?start_date=${start}&end_date=${end}&nm_common=40`,
+        { headers: { Authorization: `Bearer ${API_TOKEN}` } }
+      );
+      const result: [string, number][] = await response.json();
+      setMostCommonWords(result.map(([word, count]) => ({ name: word, weight: count })));
     } catch (err) {
-      console.error(`Error fetching most_common_words:`, err);
+      console.error("Error fetching most_common_words:", err);
     } finally {
-      setLoadingMostCommonWords(false)
+      setLoadingMostCommonWords(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchSentiments();
@@ -137,9 +119,8 @@ export default function Overview() {
     fetchMostCommonWords();
   }, [range]);
 
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 md:px-4">
       <ToggleGroup
         variant="outline"
         type="single"
@@ -147,45 +128,28 @@ export default function Overview() {
         onValueChange={(val) => val && setRange(val as "7" | "30")}
         className="inline-flex items-center justify-center text-sm"
       >
-        <ToggleGroupItem value="7" className="bg-gray-100 text-gray-500 data-[state=on]:bg-white data-[state=on]:text-black">Last 7 Days</ToggleGroupItem>
-        <ToggleGroupItem value="30" className="bg-gray-100 text-gray-500 data-[state=on]:bg-white data-[state=on]:text-black">Last 30 Days</ToggleGroupItem>
+        <ToggleGroupItem value="7" className="bg-gray-100 text-gray-500 data-[state=on]:bg-white data-[state=on]:text-black">
+          Last 7 Days
+        </ToggleGroupItem>
+        <ToggleGroupItem value="30" className="bg-gray-100 text-gray-500 data-[state=on]:bg-white data-[state=on]:text-black">
+          Last 30 Days
+        </ToggleGroupItem>
       </ToggleGroup>
 
-
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="sm:w-1/5 flex flex-col gap-2">
-          <CardSentiment
-            title="Positive"
-            value={sentiments?.positive_sentiments}
-            type="positive"
-            loading={loadingSentiments.positive}
-          />
-          <CardSentiment
-            title="Negative"
-            value={sentiments?.negative_sentiments}
-            type="negative"
-            loading={loadingSentiments.negative}
-          />
-          <CardSentiment
-            title="Neutral"
-            value={sentiments?.neutral_sentiments}
-            type="neutral"
-            loading={loadingSentiments.neutral}
-          />
+      <div className="flex flex-col-reverse lg:flex-row gap-4">
+        <div className="w-full lg:w-1/4 flex flex-col gap-2">
+          <CardSentiment title="Positive" value={sentiments?.positive_sentiments} type="positive" loading={loadingSentiments.positive} />
+          <CardSentiment title="Negative" value={sentiments?.negative_sentiments} type="negative" loading={loadingSentiments.negative} />
+          <CardSentiment title="Neutral" value={sentiments?.neutral_sentiments} type="neutral" loading={loadingSentiments.neutral} />
         </div>
 
-        {/* Right side – word cloud */}
-        <div className="w-4/5 gap-2">
-          <Card className="h-full">
-            <CardContent className="px-2 mt-0 pt-0 h-full">
+        <div className="w-full lg:w-3/4">
+          <Card className="h-full min-h-[300px]">
+            <CardContent className="px-2 h-full">
               {loadingMostCommonWords ? (
                 <Loading text="" />
-              ) : mostCommonWords ? (
-                <WordCloudChart
-                  seriesData={mostCommonWords}
-                  startDate={start}
-                  endDate={end}
-                />
+              ) : mostCommonWords?.length > 0 ? (
+                <WordCloudChart seriesData={mostCommonWords} startDate={start} endDate={end} />
               ) : (
                 <p className="text-muted-foreground text-sm">No data loaded.</p>
               )}
@@ -194,32 +158,25 @@ export default function Overview() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="gap-2">
-          <CardHeader className="px-4 -my-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader className="px-4">
             <CardTitle className="text-2xl">Top 5 Positive Feeds</CardTitle>
           </CardHeader>
-          <CardContent className="px-3 mt-0 pt-0">
-            <TopFeeds
-              value={topFeeds.positive}
-              loading={loadingFeeds.positive}
-            />
+          <CardContent className="px-3 pt-0 -mt-5">
+            <TopFeeds value={topFeeds.positive} loading={loadingFeeds.positive} />
           </CardContent>
         </Card>
 
-        <Card className="gap-2">
-          <CardHeader className="px-4 -my-3">
+        <Card>
+          <CardHeader className="px-4 pb-1">
             <CardTitle className="text-2xl">Top 5 Negative Feeds</CardTitle>
           </CardHeader>
-          <CardContent className="px-3 mt-0 pt-0">
-            <TopFeeds
-              value={topFeeds.negative}
-              loading={loadingFeeds.negative}
-            />
+          <CardContent className="px-3 pt-0 -mt-5">
+            <TopFeeds value={topFeeds.negative} loading={loadingFeeds.negative} />
           </CardContent>
         </Card>
       </div>
-
     </div>
   );
 }

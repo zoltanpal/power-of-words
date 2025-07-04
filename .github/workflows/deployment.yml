@@ -32,13 +32,14 @@ jobs:
             # Determine working directory
             if [ "$ENV" == "prod" ]; then
               echo "Deploying to production..."
-              WORK_DIR=${{ secrets.PROD_CLIENT_DEPLOYMENT_PATH }}
-              cd $WORK_DIR
+              WORK_DIR=${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}
+              cd ${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}
             else
               echo "Deploying to development..."
-              WORK_DIR=${{ secrets.DEV_CLIENT_DEPLOYMENT_PATH }}
-              cd $WORK_DIR
+              WORK_DIR=${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
+              cd ${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
             fi
+
 
             echo "working directory"
             echo $WORK_DIR

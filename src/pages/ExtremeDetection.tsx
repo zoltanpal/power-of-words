@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 import Loading from "@/components/elements/Loading";
+import { Separator } from "@/components/ui/separator";
 
 import { DateRangePicker } from "@/components/elements/DateRangePicker";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
@@ -84,7 +85,7 @@ export default function ExtremeDetection() {
 
     return (
         <>
-            <p className="text-muted-foreground max-w-2xl my-3">
+            <p className="text-muted-foreground mb-3 mt-0">
             Find articles with extremely high or low sentiment values to detect biased or emotional content.
             </p>
           <div className="flex gap-2">
@@ -100,6 +101,8 @@ export default function ExtremeDetection() {
             </Button>
             </div>
           </div>
+
+          <Separator className="my-4" />
 
           <div className="mt-4 space-y-6">
             <Card className="gap-2">

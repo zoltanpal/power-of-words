@@ -18,15 +18,15 @@ type Props = {
 };
 
 const typeStyleMap = {
-  positive: "text-6xl text-green-600",
-  negative: "text-6xl text-red-600",
-  neutral: "text-6xl text-blue-600",
+  positive: "text-5xl text-green-600",
+  negative: "text-5xl text-red-600",
+  neutral: "text-5xl text-blue-600",
 };
 
 
 export function CardSentiment({ title, value, type, loading }: Props) {
   return (
-    <Card className="flex min-h-[6rem] min-w-[18rem] pt-3 pl-0">
+    <Card className="flex min-h-[6rem] min-w-[18rem] pt-3 pl-0 gap-2">
       <CardHeader className="px-4">
         <CardTitle className="text-2xl">{title}</CardTitle>
         <CardDescription className="mt-0 pt-0"># of {title} feeds</CardDescription>
@@ -36,7 +36,7 @@ export function CardSentiment({ title, value, type, loading }: Props) {
           {type === "neutral" && <MehIcon className="text-gray-500" />}
         </CardAction>
       </CardHeader>
-      <CardContent className="flex items-center justify-center text-3xl font-bold">
+      <CardContent className="flex items-center justify-center font-bold">
         {loading ? (
           <Loader2 className="animate-spin w-8 h-8" />
         ) : (
