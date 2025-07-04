@@ -40,7 +40,10 @@ jobs:
               cd ${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
             fi
 
-            
+
+            echo "working directory"
+            echo $WORK_DIR
+          
             # Clone if not exists
             if [ ! -d ".git" ]; then
               git clone https://github.com/zoltanpal/pow.palzoltan.net.git .
@@ -53,9 +56,9 @@ jobs:
             git clean -fd
             git checkout ${{ github.ref_name }}
 
-            # Set up Node.js environment (assumes Node and npm are installed)
-            #export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
+            # # Set up Node.js environment (assumes Node and npm are installed)
+            # #export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
 
-            # Install dependencies and build
-            npm install
-            npm run build
+            # # Install dependencies and build
+            # npm install
+            # npm run build
