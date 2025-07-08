@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { SearchIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { InfoIcon, SearchIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import CorrelationHeatmapChart from "@/components/charts/CorrelationHeatmapChart";
+import { getDateRange } from "@/lib/utils";
 
 const API_HOST = import.meta.env.VITE_API_HOST;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
@@ -22,50 +23,11 @@ const monthOptions = [
   { label: "Previous Year", value: "last_year" },
 ];
 
-function getDateRange(option: string): { start: string; end: string } {
-  const today = new Date();
-  const end = today.toISOString().split("T")[0];
-  const startDate = new Date(today);
-
-  switch (option) {
-    case "last_3_months":
-      startDate.setMonth(startDate.getMonth() - 2);
-      break;
-    case "last_6_months":
-      startDate.setMonth(startDate.getMonth() - 5);
-      break;
-    case "last_12_months":
-      startDate.setMonth(startDate.getMonth() - 11);
-      break;
-    case "ytd":
-      startDate.setMonth(0);
-      startDate.setDate(1);
-      break;
-    case "last_year":
-      startDate.setFullYear(today.getFullYear() - 1);
-      startDate.setMonth(0);
-      startDate.setDate(1);
-      today.setFullYear(today.getFullYear() - 1);
-      today.setMonth(11);
-      today.setDate(31);
-      return {
-        start: startDate.toISOString().split("T")[0],
-        end: today.toISOString().split("T")[0],
-      };
-    default:
-      startDate.setMonth(startDate.getMonth() - 2);
-  }
-
-  return {
-    start: startDate.toISOString().split("T")[0],
-    end,
-  };
-}
 
 export default function CorrelationBetweenSources() {
   const [loadingData, setLoadingData] = useState(false);
   const [selectedRange, setSelectedRange] = useState<string>("last_3_months");
-  const [word, setWord] = useState<string>("");
+  const [word, setWord] = useState<string>("ukrajna");
   const [apiData, setApiData] = useState<any[]>([]);
 
   const onSearch = () => {
@@ -75,6 +37,11 @@ export default function CorrelationBetweenSources() {
     }
     fetchData();
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
 
   const fetchData = async () => {
     const { start, end } = getDateRange(selectedRange);
@@ -102,11 +69,11 @@ export default function CorrelationBetweenSources() {
 
   return (
     <>
-      <p className="text-muted-foreground mb-3 text-justify">
+      <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
+        <InfoIcon className="text-blue-600 w-5 h-5" />
         This heatmap shows how similarly different news sources talk about selected topics over time.
         The correlation is calculated using monthly average sentiment scores.
       </p>
-
       {/* Filter Controls */}
       <div className="flex flex-wrap gap-2 items-end">
         <SingleSelectDropdown
@@ -152,6 +119,7 @@ export default function CorrelationBetweenSources() {
 
         {/* Heatmap Description */}
         <div className="sm:w-1/3">
+            <h1 className="text-2xl">📌 What It Tells You</h1>
           <ul className="my-3 ml-4 list-disc [&>li]:mt-2 text-l text-muted-foreground">
             <li>
               Each square compares how similarly two news sources report on the selected topic(s) over time.

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, InfoIcon } from "lucide-react";
 import { addDays, format } from "date-fns";
 import { formatDate, getMaxEntry } from "@/lib/utils";
 
@@ -75,11 +75,14 @@ export default function LiveAnalysisKeyword() {
         variant="destructive"
       />
 
-      <div className="space-y-4 my-2">
-        <p className="text-muted-foreground max-w-2xl">
+      <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
+        <InfoIcon className="text-blue-600 w-5 h-5" />
           Search for news by entering a word or phrase below, and analyze the results 
           to get real-time sentiment predictions from various sources.
         </p>
+
+
+      <div className="space-y-4 my-2">
 
         <div className="flex flex-wrap gap-2 items-center">
           <Input
@@ -87,6 +90,7 @@ export default function LiveAnalysisKeyword() {
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
             placeholder="e.g. economy, Ukraine, AI"
+            autoComplete="off"
             className="w-56"
           />
 

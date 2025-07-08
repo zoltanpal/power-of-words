@@ -76,6 +76,8 @@ export default function Feeds() {
 
   return (
     <div className="space-y-6 px-2 md:px-4">
+      <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
+      </p>
       {/* Filter Section */}
       <div className="flex flex-wrap justify-start items-end gap-2">
         <div className="min-w-[200px]">

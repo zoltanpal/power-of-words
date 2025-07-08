@@ -1,96 +1,121 @@
-import { useState } from "react";
-import { SearchIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { SearchIcon, InfoIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { TagInput } from "@/components/ui/tag-input";
+import { Input } from "@/components/ui/input";
+import Loading from "@/components/elements/Loading";
 
-import { DateRangePicker } from "@/components/elements/DateRangePicker";
-import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
+import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
+import SentimentBreakdownDataTable from "@/components/tables/SentimentBreakdownDataTable";
+//import SentimentBreakdownTable from "@/components/tables/SentimentBreakdownTable";
+import { getDateRange } from "@/lib/utils";
 
 const API_HOST = import.meta.env.VITE_API_HOST;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
+const monthOptions = [
+  { label: "Last 3 months", value: "last_3_months" },
+  { label: "Last 6 months", value: "last_6_months" },
+  { label: "Last 12 months", value: "last_12_months" },
+  { label: "This Year", value: "ytd" },
+  { label: "Previous Year", value: "last_year" },
+];
+
 export default function BiasDetection() {
-
-    const [range, setRange] = useState<{ from: Date; to: Date }>(() => {
-        const to = new Date();
-        const from = new Date();
-        from.setDate(to.getDate() - 6);
-        return { from, to };
-    });
-
-    const [sources, setSources] = useState<string[]>([]);
-    const [words, setWords] = useState<string[]>([]);
+    const [loadingData, setLoadingData] = useState(false);
+    const [selectedRange, setSelectedRange] = useState<string>("last_3_months");
+    const [word, setWord] = useState<string>("brüsszel");
+    const [apiData, setApiData] = useState<any[]>([]);
 
     const onSearch = () => {
-      if (!words || words.length == 0) {
-        alert("Please add at least one word")
-        return
+      if (!word || word.trim().length === 0) {
+        alert("Please enter a keyword or phrase");
+        return;
       }
-      fetchData()
+      fetchData();
     };
 
+      useEffect(() => {
+        fetchData();
+      }, []);
+
     const fetchData = async () => {
-      const start = range.from.toISOString().split("T")[0];
-      const end = range.to.toISOString().split("T")[0];
+      const { start, end } = getDateRange(selectedRange);
 
       const params = new URLSearchParams({
         start_date: start,
         end_date: end,
+        words: word,
       });
 
-      if (words.length > 0) {
-        params.set("words", words.join(','));
-      }
+      setLoadingData(true);
 
-      if (sources.length > 0) {
-        params.set("sources", sources.join(","));
-      }
-
-      fetchBiasDetection(params)
-
-    }
-
-    const fetchBiasDetection = async(apiParams: URLSearchParams) => {
-      const url = `${API_HOST}/bias_detection?${apiParams.toString()}`;
-      console.log(url);
       try {
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
+        const response = await fetch(`${API_HOST}/bias_detection?${params.toString()}`, {
+          headers: { Authorization: `Bearer ${API_TOKEN}` },
         });
-
         const result = await response.json();
-        console.log("Search result (bias_detection):", result);
+        setApiData(result ?? []);
+        console.log(result);
       } catch (err) {
         console.error("Error fetching feeds:", err);
       } finally {
-        //setLoadingFeeds(false);
+        setLoadingData(false);
       }
-    }
+    };
+
 
     return (
-        <>
-            <p className="text-muted-foreground max-w-2xl my-3">
-            This dataset shows how different news sources report on specific keywords, based on their sentiment analysis.
-            </p>
+        <div>
+        <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
+          <InfoIcon className="text-blue-600 w-5 h-5" />
+          This report analyzes how different Hungarian news outlets cover a given keyword based on sentiment. 
+          It helps highlight potential bias by comparing tone (positive/negative) and consistency across sources.
+        </p>
+
+
           <div className="flex gap-2">
             <div className="flex">
-              <DateRangePicker value={range} onChange={(r) => setRange(r)} />
+              <SingleSelectDropdown
+                options={monthOptions}
+                placeholder="Select range"
+                defaultValue="last_3_months"
+                onChange={(value) => setSelectedRange(value)}
+              />
             </div>
             <div className="flex">
-              <SourceSelectorMulti value={sources} onChange={setSources} />
+              <Input
+                id="word"
+                value={word}
+                onChange={(e) => setWord(e.target.value)}
+                placeholder="e.g. economy, Ukraine, AI"
+                className="w-56"
+              />
             </div>
             <div className="flex">
-              <TagInput value={words} onChange={setWords} placeholder="Add words" />
-            </div>
-            <div className="flex">
-            <Button size="sm" onClick={onSearch} className="text-white bg-blue-500 hover:bg-blue-600">
-                <SearchIcon /> Search
-            </Button>
+              <Button
+                size="sm"
+                onClick={onSearch}
+                className="text-white bg-blue-500 hover:bg-blue-600"
+              >
+                <SearchIcon className="mr-1" /> Search
+              </Button>
             </div>
           </div>
-        </>
+          <div className="mt-3">
+              {loadingData ? (
+                <Loading text="Loading data..." />
+              ) : apiData.length > 0 ? (
+                <>
+                <SentimentBreakdownDataTable data={apiData} />
+                </>
+
+              ) : (
+                <p className="text-muted-foreground text-lg text-center py-8">
+                  No data found for the selected keyword and date range.
+                </p>
+              )}
+          </div>
+        </div>
     )
 } 

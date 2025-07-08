@@ -7,9 +7,10 @@ import {
   SearchIcon,
   InfoIcon,
   LinkIcon,
-  //ScaleIcon,
-  AlertTriangleIcon,
-  ZapIcon
+  ScaleIcon,
+  //AlertTriangleIcon,
+  ZapIcon,
+  Link2Icon
 } from "lucide-react";
 
 import {
@@ -31,8 +32,9 @@ const mainMenuItems = [
 const analyticsMenuItems = [
   { title: "Trends", url: "/trends", icon: TrendingUpIcon },
   { title: "Source Correlation", url: "/correlation_between_sources", icon: LinkIcon },
-  //{ title: "Bias Detection", url: "/bias_detection", icon: ScaleIcon },
-  { title: "Extreme Detection", url: "/extreme_detection", icon: AlertTriangleIcon },
+  { title: "Bias Detection", url: "/bias_detection", icon: ScaleIcon },
+  { title: "Word Co-Occurences", url: "/word_co_occurences", icon: Link2Icon },
+  //{ title: "Extreme Detection", url: "/extreme_detection", icon: AlertTriangleIcon },
 ];
 
 const liveAnalyticsMenuItems = [
