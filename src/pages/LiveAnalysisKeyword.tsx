@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SearchIcon, InfoIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import { addDays, format } from "date-fns";
 import { formatDate, getMaxEntry } from "@/lib/utils";
 

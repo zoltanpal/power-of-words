@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { InfoIcon, SearchIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import {
   Card,
   CardContent,

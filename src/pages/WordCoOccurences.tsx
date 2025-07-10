@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SearchIcon, InfoIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
