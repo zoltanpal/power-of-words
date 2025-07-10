@@ -76,7 +76,6 @@ export default function LiveAnalysisKeyword() {
       />
 
       <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
-        <InfoIcon className="text-blue-600 w-5 h-5" />
           Search for news by entering a word or phrase below, and analyze the results 
           to get real-time sentiment predictions from various sources.
         </p>

@@ -70,7 +70,6 @@ export default function WordCoOccurences() {
     return (
         <div>
         <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
-        <InfoIcon className="text-blue-600 w-5 h-5" />
         The table shows words that frequently appear together with a specific target word (e.g., "putyin") in the titles of news articles.
       </p>
 

@@ -68,7 +68,6 @@ export default function BiasDetection() {
     return (
         <div>
         <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
-          <InfoIcon className="text-blue-600 w-5 h-5" />
           This report analyzes how different Hungarian news outlets cover a given keyword based on sentiment. 
           It helps highlight potential bias by comparing tone (positive/negative) and consistency across sources.
         </p>
