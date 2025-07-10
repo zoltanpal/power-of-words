@@ -44,14 +44,8 @@ jobs:
 
             # Git pull latest changes
             git fetch origin
-            if git rev-parse --verify ${{ github.ref_name }} >/dev/null 2>&1; then
-              echo "Branch exists locally, checking out"
-              git checkout ${{ github.ref_name }}
-            else
-              echo "Branch does not exist locally, creating tracking branch"
-              git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
-            fi
-            git pull origin ${{ github.ref_name }}
+            git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+            git reset --hard origin/${{ github.ref_name }}
 
             # Set up Node.js environment (adjust path if needed)
             export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
