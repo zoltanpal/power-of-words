@@ -40,13 +40,12 @@ jobs:
               cd ${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
             fi
 
-
             echo "working directory"
             echo $WORK_DIR
           
             # Clone if not exists
             if [ ! -d ".git" ]; then
-              git clone https://github.com/zoltanpal/pow.palzoltan.net.git .
+              git clone git@github.com:zoltanpal/pow.palzoltan.net.git .
               git checkout ${{ github.ref_name }}
             fi
 
