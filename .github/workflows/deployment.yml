@@ -27,35 +27,33 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            set -e  # Stop on any error
+
             ENV=${{ github.event.inputs.environment }}
 
-            # Determine working directory
             if [ "$ENV" == "prod" ]; then
               echo "Deploying to production..."
               WORK_DIR=${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}
-              cd ${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}
             else
               echo "Deploying to development..."
               WORK_DIR=${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
-              cd ${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
             fi
 
-            echo "working directory"
-            echo $WORK_DIR
-          
-            # Clone if not exists
-            if [ ! -d ".git" ]; then
-              git clone git@github.com:zoltanpal/pow.palzoltan.net.git .
-              git checkout ${{ github.ref_name }}
-            fi
+            echo "Working directory: $WORK_DIR"
+            cd "$WORK_DIR"
 
-            # Pull latest changes
+            # Git pull latest changes
             git fetch origin
-            git reset --hard origin/${{ github.ref_name }}
-            git clean -fd
-            git checkout ${{ github.ref_name }}
+            if git rev-parse --verify ${{ github.ref_name }} >/dev/null 2>&1; then
+              echo "Branch exists locally, checking out"
+              git checkout ${{ github.ref_name }}
+            else
+              echo "Branch does not exist locally, creating tracking branch"
+              git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+            fi
+            git pull origin ${{ github.ref_name }}
 
-            # Set up Node.js environment (assumes Node and npm are installed)
+            # Set up Node.js environment (adjust path if needed)
             export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
 
             # Install dependencies and build
