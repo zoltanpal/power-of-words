@@ -23,7 +23,7 @@ export default function About() {
             <h3 className="text-2xl font-semibold tracking-tight mt-10">
                 Key Features
             </h3>
-            <ul className="my-3 ml-6 list-disc [&>li]:mt-1 text-justify">
+            <ul className="my-3 ml-6 text-l list-disc [&>li]:mt-1 text-justify">
                 <li><b>Real-Time Sentiment Analysis:</b> Get up-to-the-minute sentiment evaluations of the latest news articles.</li>
                 <li><b>Comprehensive Sentiment Categories:</b> Understand the emotional tone of articles with clear positive, negative, and neutral classifications.</li>
                 <li><b>Influence Insights:</b> Discover how specific words and phrases can impact reader perception and sentiment.</li>

@@ -75,7 +75,7 @@ export function AppSidebar() {
           <SidebarMenuGroup items={footerMenuItems}  />
         </SidebarGroup>
       </SidebarFooter>
-      <div className="text-xs p-2 text-right">(beta)</div>
+      <div className="text-xs p-2 text-right">(beta v{import.meta.env.VITE_APP_VERSION})</div>
     </Sidebar>
   );
 } 
