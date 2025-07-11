@@ -69,7 +69,7 @@ export default function WordCloudChart({
     <div
       ref={chartRef}
       className="word-cloud-chart-container"
-      style={{ width: "100%", height: "400px" }}
+      style={{ width: "100%", height: "500px" }}
     />
   )
 }

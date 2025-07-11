@@ -48,7 +48,7 @@ export default function SentimentOverTimeChart({ startDate, endDate, data }: Pro
         type: "area",
       },
       title: {
-        text: "Sentiments Over Time",
+        text: "Sentiment Over Time",
       },
       subtitle: {
           text: startDate + ' - ' + endDate

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { getWindow } from "@/lib/dateRanges";
+import type { DateRange } from '@/lib/dateRanges'
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CardSentiment } from "@/components/elements/CardSentiment";
 import { TopFeeds } from "@/components/elements/TopFeeds";
@@ -46,7 +48,11 @@ export default function Overview() {
   const [range, setRange] = useState<"7" | "30">("7");
   const { start, end } = getDateRange(Number(range));
 
+  const currentWindow: DateRange = getWindow(range);
+  const previousWindow: DateRange = getWindow(range, range);
+
   const [sentiments, setSentiments] = useState<SentimentData | null>(null);
+  const [prevSentiments, setPrevSentiments] = useState<SentimentData | null>(null);
   const [topFeeds, setTopFeeds] = useState<{ positive: TopFeedItem[]; negative: TopFeedItem[] }>({
     positive: [],
     negative: [],
@@ -64,11 +70,12 @@ export default function Overview() {
   });
   const [loadingMostCommonWords, setLoadingMostCommonWords] = useState(false);
 
+
   const fetchSentiments = async () => {
     setLoadingSentiments({ positive: true, negative: true, neutral: true });
     try {
       const response = await fetch(
-        `${API_HOST}/count_sentiments?start_date=${start}&end_date=${end}`,
+        `${API_HOST}/count_sentiments?start_date=${currentWindow.start}&end_date=${currentWindow.end}`,
         { headers: { Authorization: `Bearer ${API_TOKEN}` } }
       );
       const result = await response.json();
@@ -77,6 +84,21 @@ export default function Overview() {
       console.error("Error fetching sentiment data:", err);
     } finally {
       setLoadingSentiments({ positive: false, negative: false, neutral: false });
+    }
+  };
+
+  const fetchPrevSentiments = async () => {
+    try {
+      const response = await fetch(
+        `${API_HOST}/count_sentiments?start_date=${previousWindow.start}&end_date=${previousWindow.end}`,
+        { headers: { Authorization: `Bearer ${API_TOKEN}` } }
+      );
+      const result = await response.json();
+      setPrevSentiments(result);
+    } catch (err) {
+      console.error("Error fetching sentiment data:", err);
+    } finally {
+      //
     }
   };
 
@@ -114,6 +136,7 @@ export default function Overview() {
 
   useEffect(() => {
     fetchSentiments();
+    fetchPrevSentiments();
     fetchTopFeeds("positive");
     fetchTopFeeds("negative");
     fetchMostCommonWords();
@@ -138,9 +161,27 @@ export default function Overview() {
 
       <div className="flex flex-col-reverse lg:flex-row gap-4">
         <div className="w-full lg:w-1/4 flex flex-col gap-2">
-          <CardSentiment title="Positive" value={sentiments?.positive_sentiments} type="positive" loading={loadingSentiments.positive} />
-          <CardSentiment title="Negative" value={sentiments?.negative_sentiments} type="negative" loading={loadingSentiments.negative} />
-          <CardSentiment title="Neutral" value={sentiments?.neutral_sentiments} type="neutral" loading={loadingSentiments.neutral} />
+          <CardSentiment 
+            title="Positive" 
+            curr_value={sentiments?.positive_sentiments} 
+            prev_value={prevSentiments?.positive_sentiments}
+            type="positive" 
+            loading={loadingSentiments.positive} 
+          />
+          <CardSentiment 
+            title="Negative" 
+            curr_value={sentiments?.negative_sentiments} 
+            prev_value={prevSentiments?.negative_sentiments}
+            type="negative" 
+            loading={loadingSentiments.negative} 
+          />
+          <CardSentiment 
+            title="Neutral" 
+            curr_value={sentiments?.neutral_sentiments} 
+            prev_value={sentiments?.negative_sentiments} 
+            type="neutral" 
+            loading={loadingSentiments.neutral} 
+          />
         </div>
 
         <div className="w-full lg:w-3/4">

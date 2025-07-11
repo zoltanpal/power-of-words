@@ -1,4 +1,8 @@
-import { Frown, MehIcon, SmileIcon } from "lucide-react"
+import { 
+  Frown, 
+  MehIcon, 
+  SmileIcon
+  } from "lucide-react"
 
 import {
   Card,
@@ -7,12 +11,15 @@ import {
   CardContent,
   CardDescription,
   CardAction,
+  CardFooter,
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { TrendPercentBadge } from "./TrendPercentBadge";
 
 type Props = {
   title: string;
-  value?: number;
+  curr_value?: number;
+  prev_value?: number;
   type: "positive" | "negative" | "neutral";
   loading: boolean;
 };
@@ -24,9 +31,20 @@ const typeStyleMap = {
 };
 
 
-export function CardSentiment({ title, value, type, loading }: Props) {
+export function CardSentiment({ title, curr_value, prev_value, type, loading }: Props) {
+  const delta = 
+    curr_value != null && prev_value != null 
+      ? curr_value - prev_value 
+      : undefined;
+
+  const percent =
+    delta != null && prev_value
+      ? (delta / prev_value) * 100
+      : undefined;
+
+
   return (
-    <Card className="flex min-h-[6rem] min-w-[18rem] pt-3 pl-0 gap-2">
+    <Card className="flex min-h-[6rem] min-w-[18rem] py-3 pl-0 gap-2">
       <CardHeader className="px-4">
         <CardTitle className="text-2xl">{title}</CardTitle>
         <CardDescription className="mt-0 pt-0"># of {title} feeds</CardDescription>
@@ -40,11 +58,22 @@ export function CardSentiment({ title, value, type, loading }: Props) {
         {loading ? (
           <Loader2 className="animate-spin w-8 h-8" />
         ) : (
-          <span className={typeStyleMap[type]}>
-            {value?.toLocaleString() ?? "–"}
-          </span>
+            <span className={`${typeStyleMap[type]} block my-1`}>
+              {curr_value?.toLocaleString() ?? "–"}
+            </span>          
         )}
       </CardContent>
+      <CardFooter className="text-right">
+      {loading ? (
+          <></>
+        ) : (
+          <span className="m-0 p-0 items-right">
+            {percent != null && prev_value != null && (
+                <TrendPercentBadge sentiment={type} delta={delta} percent={percent} />
+              )}
+            </span>
+        )}
+      </CardFooter>
     </Card>
   );
 }
