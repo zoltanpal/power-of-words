@@ -27,6 +27,8 @@ const monthOptions = [
 export default function CorrelationBetweenSources() {
   const [loadingData, setLoadingData] = useState(false);
   const [selectedRange, setSelectedRange] = useState<string>("last_3_months");
+  const { start, end } = getDateRange(selectedRange);
+
   const [word, setWord] = useState<string>("ukrajna");
   const [apiData, setApiData] = useState<any[]>([]);
 
@@ -44,8 +46,6 @@ export default function CorrelationBetweenSources() {
 
 
   const fetchData = async () => {
-    const { start, end } = getDateRange(selectedRange);
-
     const params = new URLSearchParams({
       start_date: start,
       end_date: end,
@@ -66,6 +66,8 @@ export default function CorrelationBetweenSources() {
       setLoadingData(false);
     }
   };
+
+  console.log(selectedRange)
 
   return (
     <>
@@ -106,7 +108,10 @@ export default function CorrelationBetweenSources() {
               {loadingData ? (
                 <Loading text="Loading data..." />
               ) : apiData.length > 0 ? (
-                <CorrelationHeatmapChart data={apiData} />
+                <CorrelationHeatmapChart 
+                startDate={start}
+                endDate={end}
+                data={apiData} />
               ) : (
                 <p className="text-muted-foreground text-lg text-center py-8">
                   No data found for the selected keyword and date range.

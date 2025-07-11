@@ -117,7 +117,10 @@ export default function Trends() {
             {loading.source ? (
               <Loading text="" />
             ) : trends.source ? (
-              <SentimentBySourceChart data={trends.source} />
+              <SentimentBySourceChart 
+              startDate={range.from.toISOString().split("T")[0]}
+              endDate={range.to.toISOString().split("T")[0]}
+              data={trends.source} />
             ) : (
               <p className="text-muted-foreground text-sm">No data loaded.</p>
             )}

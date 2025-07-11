@@ -11,6 +11,8 @@ export type SentimentBySourceData = {
 
 interface Props {
   data: SentimentBySourceData;
+  startDate: string;
+  endDate: string;
 }
 
 const sources = [
@@ -23,7 +25,7 @@ const sources = [
   "index.hu",
 ];
 
-export default function SentimentBySourceChart({ data }: Props) {
+export default function SentimentBySourceChart({ data, startDate, endDate }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<Highcharts.Chart | null>(null);
 
@@ -37,6 +39,9 @@ export default function SentimentBySourceChart({ data }: Props) {
       },
       title: {
         text: "Sentiment per Source",
+      },
+      subtitle: {
+          text: startDate + ' - ' + endDate
       },
       xAxis: {
         categories: sources,
