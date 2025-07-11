@@ -15,7 +15,6 @@ type Props = {
   }
 
 export function TrendPercentBadge({ delta, percent }: Props) {
-
     const isUp   = delta != null && delta > 0;
     const isDown = delta != null && delta < 0;
     const TrendIcon = isUp

@@ -48,8 +48,8 @@ export default function Overview() {
   const [range, setRange] = useState<"7" | "30">("7");
   const { start, end } = getDateRange(Number(range));
 
-  const currentWindow: DateRange = getWindow(range);
-  const previousWindow: DateRange = getWindow(range, range);
+  const currentWindow: DateRange = getWindow(parseInt(range));
+  const previousWindow: DateRange = getWindow(parseInt(range), parseInt(range));
 
   const [sentiments, setSentiments] = useState<SentimentData | null>(null);
   const [prevSentiments, setPrevSentiments] = useState<SentimentData | null>(null);

@@ -35,7 +35,7 @@ export function CardSentiment({ title, curr_value, prev_value, type, loading }: 
   const delta = 
     curr_value != null && prev_value != null 
       ? curr_value - prev_value 
-      : undefined;
+      : 0;
 
   const percent =
     delta != null && prev_value
@@ -69,7 +69,7 @@ export function CardSentiment({ title, curr_value, prev_value, type, loading }: 
         ) : (
           <span className="m-0 p-0 items-right">
             {percent != null && prev_value != null && (
-                <TrendPercentBadge sentiment={type} delta={delta} percent={percent} />
+                <TrendPercentBadge delta={delta} percent={percent} />
               )}
             </span>
         )}
