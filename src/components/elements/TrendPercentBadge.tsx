@@ -36,8 +36,8 @@ export function TrendPercentBadge({ delta, percent, prev_value }: Props) {
       : "text-gray-400";
 
     const tooltip = isUp
-      ? `Increased compared to last period (${prev_value} feeds)`
-      : `Decreased compared to last period (${prev_value} feeds)`
+      ? `Increased compared to previous period (${prev_value} feeds)`
+      : `Decreased compared to previous period (${prev_value} feeds)`
 
     const baseClasses = "inline-flex items-center rounded-md"
 
