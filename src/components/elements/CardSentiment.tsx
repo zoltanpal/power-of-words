@@ -63,15 +63,13 @@ export function CardSentiment({ title, curr_value, prev_value, type, loading }: 
             </span>          
         )}
       </CardContent>
-      <CardFooter className="text-right">
-      {loading ? (
-          <></>
-        ) : (
-          <span className="m-0 p-0 items-right">
-            {percent != null && prev_value != null && (
-                <TrendPercentBadge delta={delta} percent={percent} />
-              )}
-            </span>
+      <CardFooter className="px-4 flex justify-end">
+        {!loading && percent != null && prev_value != null && (
+          <TrendPercentBadge
+            delta={delta}
+            percent={percent}
+            prev_value={prev_value}
+          />
         )}
       </CardFooter>
     </Card>

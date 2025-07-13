@@ -1,6 +1,12 @@
 import { Badge } from "@/components/ui/badge"
 import clsx from "clsx"
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 import { 
     ArrowUp, 
     ArrowDown, 
@@ -12,9 +18,10 @@ import {
 type Props = {
     delta: number
     percent: number
+    prev_value: number
   }
 
-export function TrendPercentBadge({ delta, percent }: Props) {
+export function TrendPercentBadge({ delta, percent, prev_value }: Props) {
     const isUp   = delta != null && delta > 0;
     const isDown = delta != null && delta < 0;
     const TrendIcon = isUp
@@ -28,6 +35,9 @@ export function TrendPercentBadge({ delta, percent }: Props) {
       ? "text-red-500"
       : "text-gray-400";
 
+    const tooltip = isUp
+      ? `Increased compared to last period (${prev_value} feeds)`
+      : `Decreased compared to last period (${prev_value} feeds)`
 
     const baseClasses = "inline-flex items-center rounded-md"
 
@@ -38,8 +48,17 @@ export function TrendPercentBadge({ delta, percent }: Props) {
     // }
   
   return (
-    <Badge variant="outline" className={clsx(baseClasses)}>
-      <TrendIcon className={`${trendColor} w-5 h-5`} />{Math.abs(percent).toFixed(1)}%
-    </Badge>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge variant="outline" className={clsx(baseClasses)}>
+          <TrendIcon className={`${trendColor} w-5 h-5`} />{percent.toFixed(1)}%
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{tooltip}</p>
+      </TooltipContent>
+    </Tooltip>
+
+
   )
 }
