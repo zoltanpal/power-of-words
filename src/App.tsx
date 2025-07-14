@@ -16,7 +16,7 @@ const Feeds = lazy(() => import("@/pages/Feeds"));
 const Trends = lazy(() => import("@/pages/Trends"));
 const CorrelationBetweenSources = lazy(() => import("@/pages/CorrelationBetweenSources"));
 const BiasDetection = lazy(() => import("@/pages/BiasDetection"));
-const ExtremeDetection = lazy(() => import("@/pages/ExtremeDetection"));
+const RawDataViewer = lazy(() => import("@/pages/RawDataViewer"));
 const LiveAnalysisKeyword = lazy(() => import("@/pages/LiveAnalysisKeyword"));
 const LiveAnalysisRss = lazy(() => import("@/pages/LiveAnalysisRss"));
 
@@ -31,7 +31,7 @@ export default function App() {
           <Route path="trends" element={<Trends />} />
           <Route path="correlation_between_sources" element={<CorrelationBetweenSources />} />
           <Route path="bias_detection" element={<BiasDetection />} />
-          <Route path="extreme_detection" element={<ExtremeDetection />} />
+          <Route path="raw_data" element={<RawDataViewer />} />
           <Route path="word_co_occurences" element={<WordCoOccurences />} />
           <Route path="live_analysis_keyword" element={<LiveAnalysisKeyword />} />
           <Route path="live_analysis_rss" element={<LiveAnalysisRss />} />

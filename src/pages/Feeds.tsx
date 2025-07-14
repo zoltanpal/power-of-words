@@ -94,6 +94,7 @@ export default function Feeds() {
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
             placeholder="e.g. economy, Ukraine, AI"
+            autoComplete="off"
             className="w-full"
           />
         </div>
