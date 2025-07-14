@@ -26,7 +26,7 @@ export default function RawDataViewer() {
 
     const [openRowId, setOpenRowId] = useState(null);
 
-    const toggleRow = (id) => {
+    const toggleRow = (id: any) => {
       setOpenRowId((prev) => (prev === id ? null : id));
     };
 
@@ -56,7 +56,7 @@ export default function RawDataViewer() {
             setLoadingFeedData(false);
         }
     };
-    
+
     return (
         <>
               <div>
@@ -91,7 +91,7 @@ export default function RawDataViewer() {
                       </tr>
                     </thead>
                     <tbody>
-                      {feedData?.feeds.map((item) => {
+                      {feedData?.feeds.map((item: any) => {
                         const isOpen = openRowId === item.feed.id;
 
                         return (
