@@ -11,7 +11,7 @@ import {
   //AlertTriangleIcon,
   ZapIcon,
   Link2Icon,
-  TableIcon
+  //TableIcon
 } from "lucide-react";
 
 import {
