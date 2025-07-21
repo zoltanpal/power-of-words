@@ -39,10 +39,9 @@ export function TopFeeds({ value = [], loading }: Props) {
         ) : (
           value.map((item, index) => (
             <TableRow key={index}>
-              <TableCell>
-                {item.title}
-                <br />
-                <label className="text-xs text-gray-600">
+              <TableCell className="whitespace-normal break-words">
+                <div className="mb-1">{item.title}</div>
+                <label className="text-xs text-gray-600 block">
                   {formatDate(item.published)} &bull; {item.name}
                 </label>
               </TableCell>
