@@ -93,6 +93,11 @@ export default function Feeds() {
             id="free-text"
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                fetchFeeds();
+              }
+            }}
             placeholder="e.g. economy, Ukraine, AI"
             autoComplete="off"
             className="w-full"

@@ -87,6 +87,11 @@ export default function WordCoOccurences() {
                 id="word"
                 value={word}
                 onChange={(e) => setWord(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    fetchData();
+                  }
+                }}
                 placeholder="e.g. economy, Ukraine, AI"
                 className="w-56"
                 autoComplete="off"

@@ -35,7 +35,7 @@ const analyticsMenuItems = [
   { title: "Source Correlation", url: "/correlation_between_sources", icon: LinkIcon },
   { title: "Bias Detection", url: "/bias_detection", icon: ScaleIcon },
   { title: "Word Co-Occurences", url: "/word_co_occurences", icon: Link2Icon },
-  { title: "Raw Data Viewer", url: "/raw_data", icon: TableIcon },
+  //{ title: "Raw Data Viewer", url: "/raw_data", icon: TableIcon },
   //{ title: "Extreme Detection", url: "/extreme_detection", icon: AlertTriangleIcon },
 ];
 

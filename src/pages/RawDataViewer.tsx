@@ -1,19 +1,9 @@
 import { useState, useEffect } from "react";
-// import { SearchIcon } from "lucide-react";
-
-// import { Separator } from "@/components/ui/separator";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-
-// import { DateRangePicker } from "@/components/elements/DateRangePicker";
-// import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
-// import { FeedList } from "@/components/elements/FeedList";
 import Loading from "@/components/elements/Loading";
 import CustomPagination from "@/components/elements/CustomPagination";
 
-const API_HOST = import.meta.env.VITE_DEVAPI_HOST;
+const API_HOST = import.meta.env.VITE_DEV_API_HOST;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
-
 
 export default function RawDataViewer() {
     const [loadingFeedData, setLoadingFeedData] = useState(false);
@@ -31,8 +21,8 @@ export default function RawDataViewer() {
     };
 
     useEffect(() => {
-        fetchFeedData();
-      }, [page, itemsPerPage]);
+      fetchFeedData();
+    }, [page, itemsPerPage]);
 
 
     const fetchFeedData = async () => {
@@ -45,11 +35,12 @@ export default function RawDataViewer() {
         setLoadingFeedData(true);
 
         try {
-        const response = await fetch(`${API_HOST}/raw_data?${params.toString()}`, {
-            headers: { Authorization: `Bearer ${API_TOKEN}` },
-        });
-        const result = await response.json();
-        setFeedData(result ?? []);
+          const response = await fetch(`${API_HOST}/raw_data?${params.toString()}`, {
+              headers: { Authorization: `Bearer ${API_TOKEN}` },
+          });
+          const result = await response.json();
+          
+          setFeedData(result ?? []);
         } catch (err) {
             console.error("Error fetching feeds:", err);
         } finally {

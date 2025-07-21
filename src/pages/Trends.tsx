@@ -91,6 +91,12 @@ export default function Trends() {
             id="free-text"
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onSearch();
+              }
+            }}
+            autoComplete="off"
             placeholder="e.g. economy, Ukraine, AI"
             className="w-full"
           />
