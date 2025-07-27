@@ -76,10 +76,15 @@ export default function LiveJobBasedAnalysis() {
   };
 
   useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
     if (jobId && completed < total) {
-      pollingRef.current = setInterval(pollJobResults, 3000);
-      return () => pollingRef.current && clearInterval(pollingRef.current);
+      interval = setInterval(pollJobResults, 3000);
     }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [jobId, completed, total]);
 
   const onSearch = () => {
