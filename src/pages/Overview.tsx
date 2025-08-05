@@ -178,7 +178,7 @@ export default function Overview() {
           <CardSentiment 
             title="Neutral" 
             curr_value={sentiments?.neutral_sentiments} 
-            prev_value={sentiments?.negative_sentiments} 
+            prev_value={prevSentiments?.neutral_sentiments} 
             type="neutral" 
             loading={loadingSentiments.neutral} 
           />
