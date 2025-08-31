@@ -49,7 +49,7 @@ export default function CorrelationBetweenSources() {
     const params = new URLSearchParams({
       start_date: start,
       end_date: end,
-      words: word,
+      word: word,
     });
 
     setLoadingData(true);
@@ -67,7 +67,6 @@ export default function CorrelationBetweenSources() {
     }
   };
 
-  console.log(selectedRange)
 
   return (
     <>
@@ -93,6 +92,7 @@ export default function CorrelationBetweenSources() {
             }
           }}
           placeholder="e.g. economy, Ukraine, AI"
+          autoComplete="off"
           className="w-56"
         />
         <Button

@@ -45,10 +45,12 @@ export default function BiasDetection() {
       const params = new URLSearchParams({
         start_date: start,
         end_date: end,
-        words: word,
+        word: word,
       });
 
       setLoadingData(true);
+
+      console.log("Fetching data with params:", params.toString());
 
       try {
         const response = await fetch(`${API_HOST}/bias_detection?${params.toString()}`, {
@@ -56,7 +58,6 @@ export default function BiasDetection() {
         });
         const result = await response.json();
         setApiData(result ?? []);
-        console.log(result);
       } catch (err) {
         console.error("Error fetching feeds:", err);
       } finally {

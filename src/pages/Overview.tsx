@@ -126,7 +126,13 @@ export default function Overview() {
         { headers: { Authorization: `Bearer ${API_TOKEN}` } }
       );
       const result: [string, number][] = await response.json();
-      setMostCommonWords(result.map(([word, count]) => ({ name: word, weight: count })));
+      console.log("Most Common Words Result:", result);
+      setMostCommonWords(
+        result.map(({ word, count }) => ({
+          name: word,
+          weight: count
+        }))
+      );
     } catch (err) {
       console.error("Error fetching most_common_words:", err);
     } finally {
