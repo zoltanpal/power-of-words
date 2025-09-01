@@ -40,7 +40,7 @@ type mostCommonWordData = {
 
 type TopFeedItem = {
   title: string;
-  name: string;
+  source_name: string;
   published: string;
 };
 
