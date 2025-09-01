@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 
 type TopFeedItem = {
   title: string;
-  name: string;
+  source_name: string;
   published: string;
 };
 
@@ -42,7 +42,7 @@ export function TopFeeds({ value = [], loading }: Props) {
               <TableCell className="whitespace-normal break-words">
                 <div className="mb-1">{item.title}</div>
                 <label className="text-xs text-gray-600 block">
-                  {formatDate(item.published)} &bull; {item.name}
+                  {formatDate(item.published)} &bull; {item.source_name}
                 </label>
               </TableCell>
             </TableRow>

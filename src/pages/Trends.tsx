@@ -34,13 +34,13 @@ export default function Trends() {
   });
 
   const [freeText, setFreeText] = useState<string | undefined>();
-  const [loading, setLoading] = useState({ source: false, feed_date: false });
+  const [loading, setLoading] = useState({ source: false, date: false });
   const [trends, setTrends] = useState<{
     source: TrendsData | null;
-    feed_date: TrendsData | null;
-  }>({ source: null, feed_date: null });
+    date: TrendsData | null;
+  }>({ source: null, date: null });
 
-  const fetchData = async (groupBy: "source" | "feed_date") => {
+  const fetchData = async (groupBy: "source" | "date") => {
     const start = range.from.toISOString().split("T")[0];
     const end = range.to.toISOString().split("T")[0];
 
@@ -56,11 +56,14 @@ export default function Trends() {
       params.append("free_text", freeText);
     }
 
+    console.log(`Fetching ${groupBy} trends with params:`, params.toString());
+
     try {
       const response = await fetch(`${API_HOST}/get_sentiment_grouped?${params}`, {
         headers: { Authorization: `Bearer ${API_TOKEN}` },
       });
       const result = await response.json();
+      console.log(`Fetched ${groupBy} trends:`, result);
       setTrends((prev) => ({ ...prev, [groupBy]: result }));
     } catch (err) {
       console.error(`Error fetching ${groupBy} trends:`, err);
@@ -71,7 +74,7 @@ export default function Trends() {
 
   const onSearch = () => {
     fetchData("source");
-    fetchData("feed_date");
+    fetchData("date");
   };
 
   useEffect(() => {
@@ -135,13 +138,13 @@ export default function Trends() {
 
         <Card>
           <CardContent className="p-4">
-            {loading.feed_date ? (
+            {loading.date ? (
               <Loading text="" />
-            ) : trends.feed_date ? (
+            ) : trends.date ? (
               <SentimentOverTimeChart
                 startDate={range.from.toISOString().split("T")[0]}
                 endDate={range.to.toISOString().split("T")[0]}
-                data={trends.feed_date}
+                data={trends.date}
               />
             ) : (
               <p className="text-muted-foreground text-sm">No data loaded.</p>

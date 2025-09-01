@@ -12,14 +12,14 @@ import 'reactflow/dist/style.css';
 
 
 const initialNodes = [
-  { id: '1', data: { label: 'Internet'}, position: { x: 85, y: 0 }, type: 'input' },
-  { id: '2', data: { label: 'NGINX' }, position: { x: 85, y: 70 } },
-  { id: '3', data: { label: 'React App\n(Tailwind + Shadcn + HighchartsJS)' }, position: { x: 0, y: 140 } },
-  { id: '4', data: { label: 'Golang API' }, position: { x: 170, y: 140 } },
+  { id: '1', data: { label: 'Internet'}, position: { x: 85, y: -50 }, type: 'input' },
+  { id: '2', data: { label: 'NGINX' }, position: { x: 85, y: 40 } },
+  { id: '3', data: { label: 'React App (Tailwind + Shadcn + HighchartsJS)' }, position: { x: 0, y: 130 } },
+  { id: '4', data: { label: 'Golang API' }, position: { x: 170, y: 130 } },
 
   { id: '5', data: { label: 'Cronjobs\n(Python & Golang)' }, position: { x: 333, y: 40 } },
   { id: '6', data: { label: 'Python libs\n(LLM, SQLAlchemy, etc.)' }, position: { x: 500, y: 120 } },
-  { id: '7', data: { label: 'PostgreSQL' }, position: { x: 333, y: 210 } },
+  { id: '7', data: { label: 'PostgreSQL' }, position: { x: 333, y: 200 } },
   
 ];
 
