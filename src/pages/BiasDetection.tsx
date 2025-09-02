@@ -50,8 +50,6 @@ export default function BiasDetection() {
 
       setLoadingData(true);
 
-      console.log("Fetching data with params:", params.toString());
-
       try {
         const response = await fetch(`${API_HOST}/bias_detection?${params.toString()}`, {
           headers: { Authorization: `Bearer ${API_TOKEN}` },
@@ -94,6 +92,7 @@ export default function BiasDetection() {
                   }
                 }}
                 placeholder="e.g. economy, Ukraine, AI"
+                autoComplete="off"
                 className="w-56"
               />
             </div>

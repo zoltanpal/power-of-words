@@ -56,14 +56,11 @@ export default function Trends() {
       params.append("free_text", freeText);
     }
 
-    console.log(`Fetching ${groupBy} trends with params:`, params.toString());
-
     try {
       const response = await fetch(`${API_HOST}/get_sentiment_grouped?${params}`, {
         headers: { Authorization: `Bearer ${API_TOKEN}` },
       });
       const result = await response.json();
-      console.log(`Fetched ${groupBy} trends:`, result);
       setTrends((prev) => ({ ...prev, [groupBy]: result }));
     } catch (err) {
       console.error(`Error fetching ${groupBy} trends:`, err);

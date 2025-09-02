@@ -62,7 +62,6 @@ export default function AdvancedAnalytics() {
         });
 
         const result = await response.json();
-        console.log("Search result:", result);
       } catch (err) {
         console.error("Error fetching feeds:", err);
       } finally {
