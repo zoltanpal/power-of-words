@@ -22,6 +22,9 @@ import {
   SidebarFooter
 } from "@/components/ui/sidebar";
 
+import pkg from '../../package.json';
+const version = pkg.version;
+
 import { Separator } from "@/components/ui/separator";
 import { SidebarMenuGroup } from "@/components/elements/SidebarMenuGroup";
 
@@ -77,7 +80,7 @@ export function AppSidebar() {
           <SidebarMenuGroup items={footerMenuItems}  />
         </SidebarGroup>
       </SidebarFooter>
-      <div className="text-xs p-2 text-right">(beta v{import.meta.env.VITE_APP_VERSION})</div>
+      <div className="text-xs p-2 text-right">{new Date().getFullYear()} @ palzoltan.net - v{version}</div>
     </Sidebar>
   );
 } 

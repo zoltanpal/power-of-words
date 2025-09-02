@@ -66,6 +66,7 @@ export default function Feeds() {
         headers: { Authorization: `Bearer ${API_TOKEN}` },
       });
       const result = await response.json();
+      console.log("Fetched feeds:", result);  
       setApiData(result);
     } catch (err) {
       console.error("Error fetching feeds:", err);
