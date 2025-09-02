@@ -18,7 +18,7 @@ export function FeedList({ feeds }: { feeds: any[], freeText: string }) {
                 <span className="font-mono text-gray-500 font-sans font-sans subpixel-antialiased not-italic">{formatDate(feed.feed.published)} • {feed.source.name}</span>
               </div>
               <div className="mx-6">
-                <SentimentBadge sentiment={feed.feed_sentiments.sentiment_key} />
+                <SentimentBadge sentiment={feed.feed_sentiment.sentiment_key} />
                 </div>
             </li>
           ))}

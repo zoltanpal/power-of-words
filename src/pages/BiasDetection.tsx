@@ -45,7 +45,7 @@ export default function BiasDetection() {
       const params = new URLSearchParams({
         start_date: start,
         end_date: end,
-        words: word,
+        word: word,
       });
 
       setLoadingData(true);
@@ -56,7 +56,6 @@ export default function BiasDetection() {
         });
         const result = await response.json();
         setApiData(result ?? []);
-        console.log(result);
       } catch (err) {
         console.error("Error fetching feeds:", err);
       } finally {
@@ -93,6 +92,7 @@ export default function BiasDetection() {
                   }
                 }}
                 placeholder="e.g. economy, Ukraine, AI"
+                autoComplete="off"
                 className="w-56"
               />
             </div>

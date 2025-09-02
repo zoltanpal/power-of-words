@@ -40,7 +40,7 @@ type mostCommonWordData = {
 
 type TopFeedItem = {
   title: string;
-  name: string;
+  source_name: string;
   published: string;
 };
 
@@ -125,8 +125,14 @@ export default function Overview() {
         `${API_HOST}/most_common_words?start_date=${start}&end_date=${end}&nm_common=40`,
         { headers: { Authorization: `Bearer ${API_TOKEN}` } }
       );
-      const result: [string, number][] = await response.json();
-      setMostCommonWords(result.map(([word, count]) => ({ name: word, weight: count })));
+      const result: Array<{ word: string; count: number }> = await response.json();
+
+      setMostCommonWords(
+        result.map(({ word, count }) => ({
+          name: word,
+          weight: count,
+        }))
+      );
     } catch (err) {
       console.error("Error fetching most_common_words:", err);
     } finally {

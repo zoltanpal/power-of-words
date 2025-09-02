@@ -12,26 +12,26 @@ import 'reactflow/dist/style.css';
 
 
 const initialNodes = [
-  { id: '1', data: { label: 'Internet'}, position: { x: 220, y: 0 }, type: 'input' },
-  { id: '2', data: { label: 'NGINX' }, position: { x: 220, y: 80 } },
-  { id: '3', data: { label: 'FastAPI API (Python backend)' }, position: { x: 220, y: 160 } },
-  { id: '4', data: { label: 'React App\n(Tailwind + Shadcn)' }, position: { x: 0, y: 80 } },
-  { id: '5', data: { label: 'Python libs\n(LLM, SQLAlchemy, etc.)' }, position: { x: 220, y: 240 } },
-  { id: '6', data: { label: 'PostgreSQL' }, position: { x: 420, y: 220 } },
-  { id: '7', data: { label: 'Cronjobs\n(Python & Golang)' }, position: { x: 420, y: 80 } },
-  { id: '8', data: { label: 'Highcharts JS' }, position: { x: 0, y: 240 } },
+  { id: '1', data: { label: 'Internet'}, position: { x: 85, y: -50 }, type: 'input' },
+  { id: '2', data: { label: 'NGINX' }, position: { x: 85, y: 40 } },
+  { id: '3', data: { label: 'React App (Tailwind + Shadcn + HighchartsJS)' }, position: { x: 0, y: 130 } },
+  { id: '4', data: { label: 'Golang API' }, position: { x: 170, y: 130 } },
+
+  { id: '5', data: { label: 'Cronjobs\n(Python & Golang)' }, position: { x: 333, y: 40 } },
+  { id: '6', data: { label: 'Python libs\n(LLM, SQLAlchemy, etc.)' }, position: { x: 500, y: 120 } },
+  { id: '7', data: { label: 'PostgreSQL' }, position: { x: 333, y: 200 } },
+  
 ];
 
 const initialEdges = [
   { id: 'e1-2', source: '1', target: '2' },
   { id: 'e2-3', source: '2', target: '3' },
-  { id: 'e4-3', source: '4', target: '3', animated: true },
-  { id: 'e3-5', source: '3', target: '5' },
-  { id: 'e3-6', source: '3', target: '6' },
+  { id: 'e2-4', source: '2', target: '4' },
+  { id: 'e4-3', source: '4', target: '3', animated: true, style: { stroke: 'blue' } },
+  { id: 'e7-4', source: '7', target: '4', animated: true, style: { stroke: 'blue' } },
+  { id: 'e5-7', source: '5', target: '7', animated: true, style: { stroke: 'green' } },
   { id: 'e5-6', source: '5', target: '6' },
-  { id: 'e7-6', source: '7', target: '6', animated: true },
-  { id: 'e4-8', source: '4', target: '8', animated: true },
-  { id: 'e7-5', source: '7', target: '5' },
+
 ];
 
 export default function ArchitectureReactFlow() {
