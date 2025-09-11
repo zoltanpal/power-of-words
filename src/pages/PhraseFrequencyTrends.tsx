@@ -4,13 +4,22 @@ import { addDays } from "date-fns"
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-
 import PhraseFrequencyChart from "@/components/charts/PhraseFrequencyChart";
 
 import { DateRangePicker } from "@/components/elements/DateRangePicker";
 
 const API_HOST = import.meta.env.VITE_API_HOST;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
+
+const sources = [
+  "444.hu",
+  "telex.hu",
+  "24.hu",
+  "origo.hu",
+  "hirado.hu",
+  "magyarnemzet.hu",
+  "index.hu",
+];
 
 export default function PhraseFrequencyTrends() {
     const [loadingData, setLoadingData] = useState(false);
@@ -24,6 +33,8 @@ export default function PhraseFrequencyTrends() {
         return { from, to };
     });
 
+
+    const dateStrChart = range.from.toLocaleDateString() + ' - ' + range.to.toLocaleDateString();
     const onSearch = () => {
         fetchData();
       };
@@ -35,21 +46,7 @@ export default function PhraseFrequencyTrends() {
     useEffect(() => {
         if (!apiData || apiData.length === 0) return;
         
-        const sources = Array.from(new Set(apiData.map(d => d.source))).sort();
 
-        // 2) build phrase -> freq array
-        const phraseMap: Record<string, number[]> = {};
-        apiData.forEach(item => {
-            const phrase = item.phrase;
-            const idx = sources.indexOf(item.source); // position of source
-
-            if (!phraseMap[phrase]) {
-            phraseMap[phrase] = Array(sources.length).fill(0);
-            }
-            phraseMap[phrase][idx] = item.freq;
-        });
-
-        setChartData(phraseMap);
 
     }, [apiData]);
 
@@ -132,12 +129,7 @@ export default function PhraseFrequencyTrends() {
                 <Loading text="Loading data..." />
                 ) : apiData.length > 0 ? (
                     <div className="mt-4">
-
-                        <PhraseFrequencyChart 
-                            startDate={range.from.toISOString().split("T")[0]}
-                            endDate={range.to.toISOString().split("T")[0]}
-                            seriesData={chartData} />
-
+                        <PhraseFrequencyChart data={chartData} date_str={dateStrChart} />
                         
                         <pre>{JSON.stringify(apiData, null, 2)}</pre>
                     </div>
