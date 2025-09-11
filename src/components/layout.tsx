@@ -15,6 +15,7 @@ const routeTitleMap: Record<string, string> = {
   "/live_analysis_keyword": "Live Sentiment Analysis by Keyword",
   "/live_analysis_rss": "Live Sentiment Analysis from RSS",
   "/word_co_occurences": "Word Co-Occurrence",
+  "/phrase_ferquency_trends": "Phrase Frequency Trends",
   "/raw_data": "Raw Data Viewer",
   "/about": "About",
   "/tech_stack": "Tech Stack",

@@ -19,6 +19,7 @@ const BiasDetection = lazy(() => import("@/pages/BiasDetection"));
 const RawDataViewer = lazy(() => import("@/pages/RawDataViewer"));
 const LiveAnalysisKeyword = lazy(() => import("@/pages/LiveAnalysisKeyword"));
 const LiveAnalysisRss = lazy(() => import("@/pages/LiveAnalysisRss"));
+const PhraseFrequencyTrends = lazy(() => import("@/pages/PhraseFrequencyTrends"));
 
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="word_co_occurences" element={<WordCoOccurences />} />
           <Route path="live_analysis_keyword" element={<LiveAnalysisKeyword />} />
           <Route path="live_analysis_rss" element={<LiveAnalysisRss />} />
+          <Route path="phrase_ferquency_trends" element={<PhraseFrequencyTrends />} />
           
           <Route path="about" element={<About />} />
           <Route path="tech_stack" element={<TechStack />} />
