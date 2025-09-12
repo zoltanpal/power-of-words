@@ -7,6 +7,16 @@ interface Props {
   date_str: string;
 }
 
+const sources = [
+    "444.hu",
+    "telex.hu",
+    "24.hu",
+    "origo.hu",
+    "hirado.hu",
+    "magyarnemzet.hu",
+    "index.hu",
+  ];
+
 
 export default function PhraseFrequencyChart({ data, date_str }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -70,7 +80,7 @@ export default function PhraseFrequencyChart({ data, date_str }: Props) {
             }
         }],
         data: [{
-            id: 'A',
+            id: '444.hu',
             name: '444.hu',
             color: '#d7f4e7ff'
         }, {
@@ -90,24 +100,32 @@ export default function PhraseFrequencyChart({ data, date_str }: Props) {
             name: 'origo.hu',
             color: '#ffd7f7ff'
         }, {
+            id: 'F',
+            name: 'magyarnemyzet.hu',
+            color: '#f1f4c3ff'
+        }, {
+            id: 'G',
+            name: 'hirado.hu',
+            color: '#d3cdffff'
+        }, {
             name: 'Orbán Viktor',
-            parent: 'A',
+            parent: '444.hu',
             value: 9
         }, {
             name: 'magyar péter',
-            parent: 'A',
+            parent: '444.hu',
             value: 6
         }, {
             name: 'hadházy ákos',
-            parent: 'A',
+            parent: '444.hu',
             value: 3
         }, {
-            name: 'sample 43',
-            parent: 'B',
-            value: 11
+            name: 'kapu tibor',
+            parent: '444.hu',
+            value: 2
         }, {
             name: 'sample 32',
-            parent: 'B',
+            parent: '444.hu',
             value: 9
         }, {
             name: 'sample 21',
@@ -115,29 +133,119 @@ export default function PhraseFrequencyChart({ data, date_str }: Props) {
             value: 6
         }, {
             name: 'sample 143',
-            parent: 'C',
+            parent: 'B',
             value: 5
         }, {
             name: 'sample 432',
-            parent: 'C',
+            parent: 'B',
             value: 4
         }, {
             name: 'sample 6721',
-            parent: 'C',
+            parent: 'B',
             value: 3
         }, {
             name: 'sample 143',
+            parent: 'B',
+            value: 5
+        }, {
+            name: 'sample 432',
+            parent: 'C',
+            value: 14
+        }, {
+            name: 'sample 6721',
+            parent: 'C',
+            value: 11
+        }, {
+            name: 'sample 143',
+            parent: 'C',
+            value: 9
+        }, {
+            name: 'sample 432',
+            parent: 'C',
+            value: 6
+        }, {
+            name: 'sample 6721',
+            parent: 'C',
+            value: 5
+        }, {
+            name: 'kapu tibor',
+            parent: 'D',
+            value: 14
+        }, {
+            name: 'sample 6721',
+            parent: 'D',
+            value: 11
+        }, {
+            name: 'sample 143',
+            parent: 'D',
+            value: 9
+        }, {
+            name: 'sample 432',
+            parent: 'D',
+            value: 6
+        }, {
+            name: 'sample 6721',
             parent: 'D',
             value: 5
         }, {
             name: 'sample 432',
-            parent: 'D',
-            value: 4
+            parent: 'E',
+            value: 14}, {
+            name: 'sample 6721',
+            parent: 'E',
+            value: 11
+        }, {
+            name: 'sample 143',
+            parent: 'E',
+            color: '#d3cdffff',
+            value: 9
+        }, {
+            name: 'budapest pride',
+            parent: 'E',
+            value: 6
+        }, {
+            name: 'lázár jános',
+            parent: 'E',
+            value: 5 },{
+            name: 'sample 432',
+            parent: 'F',
+            value: 14
         }, {
             name: 'sample 6721',
-            parent: 'D',
-            value: 3
-        }]
+            parent: 'F',
+            value: 11
+        }, {
+            name: 'sample 143',
+            parent: 'F',
+            value: 9
+        }, {
+            name: 'sample 432',
+            parent: 'F',
+            value: 6
+        }, {
+            name: 'sample 6721',
+            parent: 'F',
+            value: 5
+        }, {
+            name: 'sample 432',
+            parent: 'G',
+            value: 14
+        }, {
+            name: 'sample 6721',
+            parent: 'G',
+            value: 11
+        }, {
+            name: 'sample 143',
+            parent: 'G',
+            value: 9
+        }, {
+            name: 'sample 432',
+            parent: 'G',
+            value: 6
+        }, {
+            name: 'sample 6721',
+            parent: 'G',
+            value: 5}]
     }],
     });
 

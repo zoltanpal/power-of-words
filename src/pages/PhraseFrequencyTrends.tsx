@@ -4,28 +4,19 @@ import { addDays } from "date-fns"
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import PhraseFrequencyChart from "@/components/charts/PhraseFrequencyChart";
-
+import TrendingPhrasesTable from "@/components/charts/TrendingPhrasesTable";
+import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
 import { DateRangePicker } from "@/components/elements/DateRangePicker";
 
 const API_HOST = import.meta.env.VITE_API_HOST;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
-const sources = [
-  "444.hu",
-  "telex.hu",
-  "24.hu",
-  "origo.hu",
-  "hirado.hu",
-  "magyarnemzet.hu",
-  "index.hu",
-];
 
 export default function PhraseFrequencyTrends() {
     const [loadingData, setLoadingData] = useState(false);
     const [apiData, setApiData] = useState<any[]>([]);
     const [dateGroup, setDateGroup] = useState<string>("month");
-    const [chartData, setChartData] = useState<Record<string, number[]>>({});
+    const [sources, setSources] = useState<string[]>([]);
     const [range, setRange] = useState<{ from: Date; to: Date }>(() => {
         const to = new Date();
         const from = new Date();
@@ -33,8 +24,6 @@ export default function PhraseFrequencyTrends() {
         return { from, to };
     });
 
-
-    const dateStrChart = range.from.toLocaleDateString() + ' - ' + range.to.toLocaleDateString();
     const onSearch = () => {
         fetchData();
       };
@@ -42,14 +31,6 @@ export default function PhraseFrequencyTrends() {
     useEffect(() => {
         fetchData();
     }, []);
-
-    useEffect(() => {
-        if (!apiData || apiData.length === 0) return;
-        
-
-
-    }, [apiData]);
-
 
     const fetchData = async () => {
         const start = range.from.toISOString().split("T")[0];
@@ -60,6 +41,10 @@ export default function PhraseFrequencyTrends() {
             date_group: dateGroup,
         });
 
+        if (sources.length > 0) {
+            apiParams.set("sources", sources.join(","));
+        }
+      
         setLoadingData(true);
 
       try {
@@ -86,17 +71,20 @@ export default function PhraseFrequencyTrends() {
             </div>
             <div className="flex flex-wrap justify-start items-end gap-2">
                 <div className="min-w-[200px]">
-                <DateRangePicker 
-                    value={range} 
-                    onChange={(r) => setRange(r)} 
-                    startDate={addDays(new Date(), -59)}
-                    endDate={new Date()}
-                    predefinedRanges={[
-                        { label: "Last 60 Days", range: () => ({ from: addDays(new Date(), -59), to: new Date() }) },
-                        { label: "Last 90 Days", range: () => ({ from: addDays(new Date(), -89), to: new Date() }) },
-                        { label: "Year to Date", range: () => ({ from: new Date(new Date().getFullYear(), 0, 1), to: new Date() }) },
-                    ]}
-                    />
+                    <DateRangePicker 
+                        value={range} 
+                        onChange={(r) => setRange(r)} 
+                        startDate={addDays(new Date(), -59)}
+                        endDate={new Date()}
+                        predefinedRanges={[
+                            { label: "Last 60 Days", range: () => ({ from: addDays(new Date(), -59), to: new Date() }) },
+                            { label: "Last 90 Days", range: () => ({ from: addDays(new Date(), -89), to: new Date() }) },
+                            { label: "Year to Date", range: () => ({ from: new Date(new Date().getFullYear(), 0, 1), to: new Date() }) },
+                        ]}
+                        />
+                </div>
+                <div className="min-w-[150px]">
+                <SourceSelectorMulti value={sources} onChange={setSources} />
                 </div>
                 <div className="mr-2">
                     <ToggleGroup
@@ -129,9 +117,7 @@ export default function PhraseFrequencyTrends() {
                 <Loading text="Loading data..." />
                 ) : apiData.length > 0 ? (
                     <div className="mt-4">
-                        <PhraseFrequencyChart data={chartData} date_str={dateStrChart} />
-                        
-                        <pre>{JSON.stringify(apiData, null, 2)}</pre>
+                        <TrendingPhrasesTable data={apiData} defaultMonth={1} />
                     </div>
                 ) : (
                     <p className="text-muted-foreground text-lg text-center py-8">
