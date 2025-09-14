@@ -53,6 +53,7 @@ export default function PhraseFrequencyTrends() {
         });
         const result = await response.json();
         setApiData(result ?? []);
+        console.log("Fetched phrase frequency trends:", result);
       } catch (err) {
         console.error("Error fetching feeds:", err);
       } finally {
@@ -116,8 +117,25 @@ export default function PhraseFrequencyTrends() {
                 {loadingData ? (
                 <Loading text="Loading data..." />
                 ) : apiData.length > 0 ? (
-                    <div className="mt-4">
-                        <TrendingPhrasesTable data={apiData} defaultMonth={1} />
+                    <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                        <div className="sm:w-2/3 flex flex-col">
+                            <div className="mt-4">
+                                <TrendingPhrasesTable data={apiData} groupMode={dateGroup} />
+                            </div>
+                        </div>
+                        <div className="sm:w-1/3 pt-22">
+                            <h1 className="text-2xl">📌 What This Table Shows</h1>
+                            <ul className="my-3 ml-4 list-disc [&>li]:mt-2 text-l text-muted-foreground">
+                                <li>The <b>most frequent phrases</b> appearing in Hungarian news headlines.</li>
+                                <li>Grouped by <b>time period (month or week)</b>, so you can see how topics change over time.</li>
+                                <li>Within each period, phrases are listed by <b>news source</b>.</li>
+                                <li><b>Rank</b> indicates the order of importance in that source for the period.</li>
+                                <li><b>Frequency</b> shows how many times the phrase was mentioned.</li>
+                            </ul>
+
+
+
+                        </div>
                     </div>
                 ) : (
                     <p className="text-muted-foreground text-lg text-center py-8">
