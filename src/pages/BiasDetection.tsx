@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ClearableInput } from "@/components/ui/cleareable-input";
 import Loading from "@/components/elements/Loading";
 
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
@@ -82,7 +82,7 @@ export default function BiasDetection() {
               />
             </div>
             <div className="flex">
-              <Input
+              <ClearableInput
                 id="word"
                 value={word}
                 onChange={(e) => setWord(e.target.value)}
