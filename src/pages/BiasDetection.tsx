@@ -94,7 +94,7 @@ export default function BiasDetection() {
               }}
               placeholder="e.g. economy, Ukraine, AI"
               autoComplete="off"
-              className="w-full"
+              className=""
             />
           </div>
     
