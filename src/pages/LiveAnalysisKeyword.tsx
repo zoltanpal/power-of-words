@@ -3,7 +3,7 @@ import { format, addDays } from "date-fns";
 import { SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ClearableInput } from "@/components/ui/cleareable-input";
 import { PopupAlert } from "@/components/ui/popup-alert";
 import Loading from "@/components/elements/Loading";
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
@@ -131,23 +131,28 @@ export default function LiveAnalysisKeyword() {
 
       <div className="space-y-4 my-2">
         <div className="flex flex-wrap gap-2 items-center">
-          <Input
-            value={freeText}
-            onChange={(e) => setFreeText(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && onSearch()}
-            placeholder="e.g. economy, Ukraine, AI"
-            className="w-56"
-            autoComplete="off"
-          />
-          <SingleSelectDropdown
-            options={[
-              { value: "hu", label: "Hungarian" },
-              { value: "en", label: "English" },
-            ]}
-            placeholder="Language"
-            defaultValue="hu"
-            onChange={setLanguage}
-          />
+          <div className="min-w-[180px]">
+            <ClearableInput
+              value={freeText}
+              onChange={(e) => setFreeText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && onSearch()}
+              placeholder="e.g. economy, Ukraine, AI"
+              className="w-56"
+              autoComplete="off"
+            />
+          </div>
+          <div className="min-w-[180px]">
+            <SingleSelectDropdown
+              options={[
+                { value: "hu", label: "Hungarian" },
+                { value: "en", label: "English" },
+              ]}
+              placeholder="Language"
+              defaultValue="hu"
+              onChange={setLanguage}
+            />
+          </div>
+
           <Button
             size="sm"
             onClick={onSearch}

@@ -7,7 +7,7 @@ import {
 
 import Loading from "@/components/elements/Loading";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ClearableInput } from "@/components/ui/cleareable-input";
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import CorrelationHeatmapChart from "@/components/charts/CorrelationHeatmapChart";
 import { getDateRange } from "@/lib/utils";
@@ -76,32 +76,40 @@ export default function CorrelationBetweenSources() {
       </p>
       {/* Filter Controls */}
       <div className="flex flex-wrap gap-2 items-end">
-        <SingleSelectDropdown
-          options={monthOptions}
-          placeholder="Select range"
-          defaultValue="last_3_months"
-          onChange={(value) => setSelectedRange(value)}
-        />
-        <Input
-          id="word"
-          value={word}
-          onChange={(e) => setWord(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              fetchData();
-            }
-          }}
-          placeholder="e.g. economy, Ukraine, AI"
-          autoComplete="off"
-          className="w-56"
-        />
-        <Button
-          size="sm"
-          onClick={onSearch}
-          className="text-white bg-blue-500 hover:bg-blue-600"
-        >
-          <SearchIcon className="mr-1" /> Search
-        </Button>
+        <div className="min-w-[180px]">
+          <SingleSelectDropdown
+              options={monthOptions}
+              placeholder="Select range"
+              defaultValue="last_3_months"
+              onChange={(value) => setSelectedRange(value)}
+            />
+        </div>
+
+        <div className="min-w-[180px]">
+          <ClearableInput
+            id="word"
+            value={word}
+            onChange={(e) => setWord(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                fetchData();
+              }
+            }}
+            placeholder="e.g. economy, Ukraine, AI"
+            autoComplete="off"
+            className="w-56"
+          />
+        </div>
+        <div>
+          <Button
+            size="sm"
+            onClick={onSearch}
+            className="text-white bg-blue-500 hover:bg-blue-600"
+          >
+            <SearchIcon className="mr-1" /> Search
+          </Button>
+        </div>     
+
       </div>
 
       {/* Main Layout */}

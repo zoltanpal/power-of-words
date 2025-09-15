@@ -3,7 +3,7 @@ import { SearchIcon } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ClearableInput } from "@/components/ui/cleareable-input";
 
 import { DateRangePicker } from "@/components/elements/DateRangePicker";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
@@ -89,7 +89,7 @@ export default function Feeds() {
         </div>
 
         <div className="min-w-[200px]">
-          <Input
+          <ClearableInput
             id="free-text"
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
