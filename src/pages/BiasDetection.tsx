@@ -73,7 +73,7 @@ export default function BiasDetection() {
     
         {/* Filter Section */}
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-          <div className="w-full sm:w-auto">
+          <div className="sm:w-auto">
             <SingleSelectDropdown
               options={monthOptions}
               placeholder="Select range"
@@ -82,7 +82,7 @@ export default function BiasDetection() {
             />
           </div>
     
-          <div className="w-full sm:w-64">
+          <div className="sm:w-64">
             <ClearableInput
               id="word"
               value={word}
@@ -98,11 +98,11 @@ export default function BiasDetection() {
             />
           </div>
     
-          <div className="w-full sm:w-auto">
+          <div className="sm:w-auto">
             <Button
               size="sm"
               onClick={onSearch}
-              className="w-full sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
+              className="sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
             >
               <SearchIcon className="mr-1" /> Search
             </Button>

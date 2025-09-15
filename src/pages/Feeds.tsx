@@ -78,15 +78,15 @@ export default function Feeds() {
     <div className="space-y-6 px-2 sm:px-3 md:px-4">
       {/* Filter Section */}
       <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-2 sm:gap-4">
-        <div className="w-full sm:w-auto">
+        <div className="sm:w-auto">
           <DateRangePicker value={range} onChange={(r) => setRange(r)} />
         </div>
   
-        <div className="w-full sm:w-auto">
+        <div className="sm:w-auto">
           <SourceSelectorMulti value={sources} onChange={setSources} />
         </div>
   
-        <div className="w-full sm:w-60">
+        <div className="sm:w-60">
           <ClearableInput
             id="free-text"
             value={freeText}
@@ -102,14 +102,14 @@ export default function Feeds() {
           />
         </div>
   
-        <div className="w-full sm:w-auto">
+        <div className="sm:w-auto">
           <Button
             size="sm"
             onClick={() => {
               setPage(1);
               fetchFeeds();
             }}
-            className="w-full sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
+            className="sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
           >
             <SearchIcon className="mr-1 w-4 h-4" />
             Search
