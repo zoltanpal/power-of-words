@@ -30,6 +30,8 @@ export default function About() {
                 <li><b>Intuitive Visualizations:</b> Explore sentiment trends and patterns through interactive charts and graphs, making it easy to interpret complex data at a glance.</li>
                 <li><b>Extensive News Coverage:</b> Stay updated with a broad range of Hungarian news sources, ensuring you don't miss any critical updates.</li>
             </ul>
+            <br />
+            <i><b>Please note:</b> Website interface is in English, but the analyzed headlines are Hungarian.</i>
         </div>
     )
         
