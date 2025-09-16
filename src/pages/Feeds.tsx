@@ -75,26 +75,24 @@ export default function Feeds() {
   };
 
   return (
-    <div className="space-y-6 px-2 md:px-4">
-      <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
-      </p>
+    <div className="space-y-6 px-2 sm:px-3 md:px-4">
       {/* Filter Section */}
-      <div className="flex flex-wrap justify-start items-end gap-2">
-        <div className="min-w-[200px]">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-2 sm:gap-4">
+        <div className="sm:w-auto">
           <DateRangePicker value={range} onChange={(r) => setRange(r)} />
         </div>
-
-        <div className="min-w-[150px]">
+  
+        <div className="sm:w-auto">
           <SourceSelectorMulti value={sources} onChange={setSources} />
         </div>
-
-        <div className="min-w-[200px]">
+  
+        <div className="sm:w-60">
           <ClearableInput
             id="free-text"
             value={freeText}
             onChange={(e) => setFreeText(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 fetchFeeds();
               }
             }}
@@ -103,52 +101,57 @@ export default function Feeds() {
             className="w-full"
           />
         </div>
-
-        <div>
+  
+        <div className="sm:w-auto">
           <Button
             size="sm"
             onClick={() => {
               setPage(1);
               fetchFeeds();
             }}
-            className="text-white bg-blue-500 hover:bg-blue-600"
+            className="sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
           >
             <SearchIcon className="mr-1 w-4 h-4" />
             Search
           </Button>
         </div>
       </div>
-
+  
       <Separator />
-
+  
       {/* Results */}
       <div>
         {apiData?.total > itemsPerPage && (
-          <CustomPagination
-            page={page}
-            setPage={setPage}
-            total={apiData.total}
-            itemsPerPage={itemsPerPage}
-            setItemsPerPage={setItemsPerPage}
-          />
+          <div className="overflow-x-auto">
+            <CustomPagination
+              page={page}
+              setPage={setPage}
+              total={apiData.total}
+              itemsPerPage={itemsPerPage}
+              setItemsPerPage={setItemsPerPage}
+            />
+          </div>
         )}
-
+  
         {loadingFeeds ? (
           <Loading text="Loading data..." />
         ) : (
           <FeedList feeds={apiData?.feeds || []} freeText={freeText} />
         )}
-
+  
         {apiData?.total > itemsPerPage && (
-          <CustomPagination
-            page={page}
-            setPage={setPage}
-            total={apiData.total}
-            itemsPerPage={itemsPerPage}
-            setItemsPerPage={setItemsPerPage}
-          />
+          <div className="overflow-x-auto">
+            <CustomPagination
+              page={page}
+              setPage={setPage}
+              total={apiData.total}
+              itemsPerPage={itemsPerPage}
+              setItemsPerPage={setItemsPerPage}
+            />
+          </div>
         )}
       </div>
     </div>
   );
+  
 }

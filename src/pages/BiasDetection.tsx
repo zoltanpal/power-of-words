@@ -65,61 +65,63 @@ export default function BiasDetection() {
 
 
     return (
-        <div>
+      <div>
         <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
           This report analyzes how different Hungarian news outlets cover a given keyword based on sentiment. 
           It helps highlight potential bias by comparing tone (positive/negative) and consistency across sources.
         </p>
-
-
-          <div className="flex gap-2">
-            <div className="flex">
-              <SingleSelectDropdown
-                options={monthOptions}
-                placeholder="Select range"
-                defaultValue="last_3_months"
-                onChange={(value) => setSelectedRange(value)}
-              />
-            </div>
-            <div className="flex">
-              <ClearableInput
-                id="word"
-                value={word}
-                onChange={(e) => setWord(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    fetchData();
-                  }
-                }}
-                placeholder="e.g. economy, Ukraine, AI"
-                autoComplete="off"
-                className="w-56"
-              />
-            </div>
-            <div className="flex">
-              <Button
-                size="sm"
-                onClick={onSearch}
-                className="text-white bg-blue-500 hover:bg-blue-600"
-              >
-                <SearchIcon className="mr-1" /> Search
-              </Button>
-            </div>
+    
+        {/* Filter Section */}
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+          <div className="sm:w-auto">
+            <SingleSelectDropdown
+              options={monthOptions}
+              placeholder="Select range"
+              defaultValue="last_3_months"
+              onChange={(value) => setSelectedRange(value)}
+            />
           </div>
-          <div className="mt-3">
-              {loadingData ? (
-                <Loading text="Loading data..." />
-              ) : apiData.length > 0 ? (
-                <>
-                <SentimentBreakdownDataTable data={apiData} />
-                </>
-
-              ) : (
-                <p className="text-muted-foreground text-lg text-center py-8">
-                  No data found for the selected keyword and date range.
-                </p>
-              )}
+    
+          <div className="sm:w-64">
+            <ClearableInput
+              id="word"
+              value={word}
+              onChange={(e) => setWord(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  fetchData();
+                }
+              }}
+              placeholder="e.g. economy, Ukraine, AI"
+              autoComplete="off"
+              className=""
+            />
+          </div>
+    
+          <div className="sm:w-auto">
+            <Button
+              size="sm"
+              onClick={onSearch}
+              className="sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
+            >
+              <SearchIcon className="mr-1" /> Search
+            </Button>
           </div>
         </div>
-    )
+    
+        {/* Results */}
+        <div className="mt-3">
+          {loadingData ? (
+            <Loading text="Loading data..." />
+          ) : apiData.length > 0 ? (
+            <SentimentBreakdownDataTable data={apiData} />
+          ) : (
+            <p className="text-muted-foreground text-lg text-center py-8">
+              No data found for the selected keyword and date range.
+            </p>
+          )}
+        </div>
+      </div>
+    );
+    
 } 
