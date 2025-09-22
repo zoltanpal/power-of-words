@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { format, addDays } from "date-fns";
+import { useState } from "react";
 import { SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -8,21 +7,49 @@ import { PopupAlert } from "@/components/ui/popup-alert";
 import Loading from "@/components/elements/Loading";
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SentimentBadge } from "@/components/elements/SentimentBadge";
-import CustomPagination from "@/components/elements/CustomPagination";
-import { getMaxEntry, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
-const API_HOST = import.meta.env.VITE_API_HOST_SENTIMENT;
+//const API_HOST = import.meta.env.VITE_API_HOST_SENTIMENT;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
-type Sentiment = "positive" | "neutral" | "negative";
-const isSentiment = (s: string): s is Sentiment =>
-  ["positive", "neutral", "negative"].includes(s);
 
 export default function LiveAnalysisKeyword() {
   const [freeText, setFreeText] = useState("");
-  const [language, setLanguage] = useState("hu");
+  const [language, setLanguage] = useState("hun");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any>(null);
+  const [showAlert, setShowAlert] = useState(false);
+
+  const onSearch = () => {
+    if (!freeText.trim()) {
+      setShowAlert(true);
+      return;
+    }
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    const params = new URLSearchParams({
+      word: freeText,
+      lang: language,
+    });
+
+    try {
+      const res = await fetch(`https://devapigo.palzoltan.net/sentiments/news_search?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${API_TOKEN}` },
+      });
+      const data = await res.json();
+      setResults(data);
+      console.log(data)
+      setLoading(false);
+    } catch (err) {
+      console.error("Error starting analysis:", err);
+      setLoading(false);
+    }
+  }
+
+  /*
   const [jobId, setJobId] = useState<string | null>(null);
   const [completed, setCompleted] = useState(0);
   const [total, setTotal] = useState(0);
@@ -114,6 +141,7 @@ export default function LiveAnalysisKeyword() {
     }
     fetchStartAnalysis();
   };
+  */
 
   return (
     <>
@@ -144,11 +172,11 @@ export default function LiveAnalysisKeyword() {
           <div className="min-w-[180px]">
             <SingleSelectDropdown
               options={[
-                { value: "hu", label: "Hungarian" },
-                { value: "en", label: "English" },
+                { value: "hun", label: "Hungarian" },
+                { value: "eng", label: "English" },
               ]}
               placeholder="Language"
-              defaultValue="hu"
+              defaultValue="hun"
               onChange={setLanguage}
             />
           </div>
@@ -159,7 +187,7 @@ export default function LiveAnalysisKeyword() {
             className="text-white bg-blue-500 hover:bg-blue-600"
           >
             <SearchIcon className="mr-2 h-4 w-4" />
-            Start Full Analysis
+            Search news
           </Button>
         </div>
       </div>
@@ -167,11 +195,10 @@ export default function LiveAnalysisKeyword() {
       <div className="my-5">
         {loading ? (
           <Loading text="Analyzing feeds, please wait..." />
-        ) : results?.results?.length > 0 ? (
+        ) : results?.length > 0 ? (
           <>
             <ul className="divide-y divide-muted border rounded-md">
-              {results.results.map((item: any, idx: number) => {
-                const topSentiment = getMaxEntry(item.sentiments ?? {})[0];
+              {results.map((item: any, idx: number) => {
                 return (
                   <li
                     key={idx}
@@ -185,7 +212,7 @@ export default function LiveAnalysisKeyword() {
                     </div>
                     <div className="mx-6">
                       <SentimentBadge
-                        sentiment={isSentiment(topSentiment) ? topSentiment : "neutral"}
+                        sentiment={item.sentiment_key }
                       />
                     </div>
                   </li>
@@ -193,17 +220,7 @@ export default function LiveAnalysisKeyword() {
               })}
             </ul>
 
-            <div className="mt-4">
-              {results.total > itemsPerPage && (
-                <CustomPagination
-                  page={page}
-                  setPage={setPage}
-                  total={results.total}
-                  itemsPerPage={itemsPerPage}
-                  setItemsPerPage={setItemsPerPage}
-                />
-              )}
-            </div>
+
           </>
         ) : null}
       </div>
