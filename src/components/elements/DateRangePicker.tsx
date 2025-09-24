@@ -1,18 +1,21 @@
 // @ts-nocheck
 
 import * as React from "react"
-import { addDays, startOfMonth, endOfMonth } from "date-fns";
-//import { hu } from "date-fns/locale";
+import { addDays, startOfMonth, endOfMonth } from "date-fns"
+// import { hu } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-//const userLocale = navigator.languages[0]
+// optional hook: npm i usehooks-ts
+import { useMediaQuery } from "usehooks-ts"
+
+// const userLocale = navigator.languages[0]
 const userLocale = "hu-HU"
 
-const today = new Date();
+const today = new Date()
 
 type DateRange = {
   from: Date
@@ -23,8 +26,6 @@ type Props = {
   value: DateRange
   onChange: (range: { from: Date; to: Date }) => void
 }
-
-//const [tempRange, setTempRange] = React.useState<DateRange | undefined>(value)
 
 const predefinedRanges = [
   {
@@ -66,6 +67,9 @@ export function DateRangePicker({ value, onChange }: Props) {
   const popoverRef = React.useRef<HTMLDivElement>(null)
   const [tempRange, setTempRange] = React.useState<DateRange>(value)
 
+  // detect mobile
+  const isSmall = useMediaQuery("(max-width: 640px)")
+
   const formatRange = () => {
     if (value.from && value.to) {
       return `${value.from.toLocaleDateString(userLocale)} - ${value.to.toLocaleDateString(userLocale)}`
@@ -89,12 +93,12 @@ export function DateRangePicker({ value, onChange }: Props) {
           onClick={() => setOpen((prev) => !prev)}
           variant="outline"
           className={cn(
-            "w-[260px] justify-start text-left font-normal",
+            "w-full max-w-xs sm:w-[260px] justify-start text-left font-normal",
             !value.from && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {formatRange()}
+          <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+          <span className="truncate">{formatRange()}</span>
         </Button>
       </PopoverTrigger>
 
@@ -103,50 +107,57 @@ export function DateRangePicker({ value, onChange }: Props) {
         className="w-auto p-0"
         align="start"
         onInteractOutside={(e) => {
-            if (popoverRef.current?.contains(e.target as Node)) {
-              e.preventDefault()
-            }
-          }}
-        >
+          if (popoverRef.current?.contains(e.target as Node)) {
+            e.preventDefault()
+          }
+        }}
+      >
         <div className="m-0">
           <Calendar
             mode="range"
             selected={tempRange?.from ? tempRange : undefined}
             onSelect={(range) => setTempRange(range ?? {})}
             captionLayout="dropdown"
-            numberOfMonths={2}
+            numberOfMonths={isSmall ? 1 : 2}
             defaultMonth={tempRange.from}
             weekStartsOn={1}
             startMonth={new Date(2021, 0)}
-            
           />
         </div>
-        <div className="flex ml-2">
-            <div className="flex ">
+
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 m-2">
+          {/* Predefined ranges */}
+          <div className="flex flex-wrap sm:flex-nowrap">
             {predefinedRanges.map((preset) => (
-                <Button
+              <Button
                 key={preset.label}
                 variant="ghost"
                 className="m-1 px-2 py-0 text-xs"
                 onClick={() => {
-                    const r = preset.range()
-                    setTempRange(r)
-                    onChange(r)
-                    setOpen(false)
+                  const r = preset.range()
+                  setTempRange(r)
+                  onChange(r)
+                  setOpen(false)
                 }}
-                >
+              >
                 {preset.label}
-                </Button>
+              </Button>
             ))}
-            </div>
-            <div className="m-2 flex justify-end gap-2">
-            <Button variant="default" size="sm" onClick={applySelection} 
-                disabled={!tempRange.from || !tempRange.to}>
-                Apply
-            </Button>
-            </div>
-        </div>
+          </div>
 
+          {/* Apply button */}
+          <div className="flex justify-end w-full sm:w-auto">
+            <Button
+              variant="default"
+              size="sm"
+              className="w-full sm:w-auto"
+              onClick={applySelection}
+              disabled={!tempRange.from || !tempRange.to}
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
       </PopoverContent>
     </Popover>
   )
