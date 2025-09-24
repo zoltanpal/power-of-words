@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          clean: true
 
       - name: Deploy to the Server (${{ github.event.inputs.environment }})
         uses: appleboy/ssh-action@v1.1.0
