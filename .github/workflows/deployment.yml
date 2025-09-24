@@ -54,4 +54,5 @@ jobs:
 
             # Install dependencies and build
             npm install
+            npm ci
             npm run build
