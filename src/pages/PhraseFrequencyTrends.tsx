@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { SearchIcon } from "lucide-react";
 import { addDays } from "date-fns"
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox"
 import Loading from "@/components/elements/Loading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import TrendingPhrasesTable from "@/components/charts/TrendingPhrasesTable";
@@ -11,12 +12,12 @@ import { DateRangePicker } from "@/components/elements/DateRangePicker";
 const API_HOST = import.meta.env.VITE_API_HOST;
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
-
 export default function PhraseFrequencyTrends() {
     const [loadingData, setLoadingData] = useState(false);
     const [apiData, setApiData] = useState<any[]>([]);
     const [dateGroup, setDateGroup] = useState<string>("month");
     const [sources, setSources] = useState<string[]>([]);
+    const [excludeName, setExcludeName] = useState(true);
     const [range, setRange] = useState<{ from: Date; to: Date }>(() => {
         const to = new Date();
         const from = new Date();
@@ -26,7 +27,7 @@ export default function PhraseFrequencyTrends() {
 
     const onSearch = () => {
         fetchData();
-      };
+    };
 
     useEffect(() => {
         fetchData();
@@ -44,21 +45,24 @@ export default function PhraseFrequencyTrends() {
         if (sources.length > 0) {
             apiParams.set("sources", sources.join(","));
         }
+        if (excludeName) {
+            apiParams.set("exclude_name", "true");
+        }
       
         setLoadingData(true);
 
-      try {
-        const response = await fetch(`${API_HOST}/phrase_frequency_trends?${apiParams.toString()}`, {
-          headers: { Authorization: `Bearer ${API_TOKEN}` },
-        });
-        const result = await response.json();
-        setApiData(result ?? []);
-        console.log("Fetched phrase frequency trends:", result);
-      } catch (err) {
-        console.error("Error fetching feeds:", err);
-      } finally {
-        setLoadingData(false);
-      }
+        try {
+            const response = await fetch(`${API_HOST}/phrase_frequency_trends?${apiParams.toString()}`, {
+                headers: { Authorization: `Bearer ${API_TOKEN}` },
+            });
+            const result = await response.json();
+            setApiData(result ?? []);
+            console.log("Fetched phrase frequency trends:", result);
+        } catch (err) {
+            console.error("Error fetching feeds:", err);
+        } finally {
+            setLoadingData(false);
+        }
     };
 
     return (
@@ -82,10 +86,10 @@ export default function PhraseFrequencyTrends() {
                             { label: "Last 90 Days", range: () => ({ from: addDays(new Date(), -89), to: new Date() }) },
                             { label: "Year to Date", range: () => ({ from: new Date(new Date().getFullYear(), 0, 1), to: new Date() }) },
                         ]}
-                        />
+                    />
                 </div>
                 <div className="min-w-[150px]">
-                <SourceSelectorMulti value={sources} onChange={setSources} />
+                    <SourceSelectorMulti value={sources} onChange={setSources} />
                 </div>
                 <div className="mr-2">
                     <ToggleGroup
@@ -96,26 +100,36 @@ export default function PhraseFrequencyTrends() {
                         className="inline-flex items-center justify-center text-sm"
                     >
                         <ToggleGroupItem value="week" className="bg-gray-100 text-gray-500 data-[state=on]:bg-white data-[state=on]:text-black">
-                        by Week
+                            by Week
                         </ToggleGroupItem>
                         <ToggleGroupItem value="month" className="bg-gray-100 text-gray-500 data-[state=on]:bg-white data-[state=on]:text-black">
-                        by Month
+                            by Month
                         </ToggleGroupItem>
                     </ToggleGroup>
+                </div>
+                <div className="flex items-center gap-2 py-2">
+                    <Checkbox 
+                        id="excludeName" 
+                        checked={excludeName} 
+                        onCheckedChange={(val) => setExcludeName(!!val)} 
+                    />
+                    <label htmlFor="excludeName" className="">
+                        Exclude names
+                    </label>
                 </div>
                 <div>
                     <Button
                         size="sm"
                         onClick={onSearch}
                         className="text-white bg-blue-500 hover:bg-blue-600"
-                        >
+                    >
                         <SearchIcon className="mr-1" /> Search
                     </Button>
                 </div>
             </div>
             <div>
                 {loadingData ? (
-                <Loading text="Loading data..." />
+                    <Loading text="Loading data..." />
                 ) : apiData.length > 0 ? (
                     <div className="flex flex-col sm:flex-row gap-4 mt-6">
                         <div className="sm:w-2/3 flex flex-col">
@@ -132,19 +146,14 @@ export default function PhraseFrequencyTrends() {
                                 <li><b>Rank</b> indicates the order of importance in that source for the period.</li>
                                 <li><b>Frequency</b> shows how many times the phrase was mentioned.</li>
                             </ul>
-
-
-
                         </div>
                     </div>
                 ) : (
                     <p className="text-muted-foreground text-lg text-center py-8">
-                      No data found for the selected keyword and date range.
+                        No data found for the selected keyword and date range.
                     </p>
-                  )}
+                )}
             </div>
         </div>
     )
-
-
 }
