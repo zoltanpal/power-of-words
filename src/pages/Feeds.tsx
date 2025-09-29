@@ -27,6 +27,7 @@ export default function Feeds() {
 
   const [sources, setSources] = useState<string[]>([]);
   const [freeText, setFreeText] = useState<string>("");
+  const [searchedText, setSearchedText] = useState<string>("");
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(30);
 
@@ -67,6 +68,7 @@ export default function Feeds() {
       });
       const result = await response.json();
       setApiData(result);
+      setSearchedText(freeText);
     } catch (err) {
       console.error("Error fetching feeds:", err);
     } finally {
@@ -136,7 +138,7 @@ export default function Feeds() {
         {loadingFeeds ? (
           <Loading text="Loading data..." />
         ) : (
-          <FeedList feeds={apiData?.feeds || []} freeText={freeText} />
+          <FeedList feeds={apiData?.feeds || []} searchedText={searchedText} />
         )}
   
         {apiData?.total > itemsPerPage && (

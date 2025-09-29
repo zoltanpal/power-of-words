@@ -1,7 +1,25 @@
 import { SentimentBadge } from "@/components/elements/SentimentBadge";
 import { formatDate } from "@/lib/utils";
 
-export function FeedList({ feeds }: { feeds: any[]; freeText: string }) {
+
+function highlightText(text: string, search: string) {
+  if (!search) return text;
+
+  const regex = new RegExp(`(${search})`, "gi"); // case-insensitive match
+  const parts = text.split(regex);
+
+  return parts.map((part, idx) =>
+    part.toLowerCase() === search.toLowerCase() ? (
+      <mark key={idx} className="bg-yellow-200 rounded">
+        {part}
+      </mark>
+    ) : (
+      part
+    )
+  );
+}
+
+export function FeedList({ feeds, searchedText }: { feeds: any[]; searchedText: string }) {
   if (!feeds?.length) return <p>No feeds found.</p>;
 
   return (
@@ -15,7 +33,7 @@ export function FeedList({ feeds }: { feeds: any[]; freeText: string }) {
             {/* Left content */}
             <div className="flex flex-col">
               <p className="text-base sm:text-lg font-sans subpixel-antialiased not-italic">
-                {feed.feed.title}
+                {highlightText(feed.feed.title, searchedText)}
               </p>
               <span className="text-sm text-gray-500 font-sans subpixel-antialiased not-italic">
                 {formatDate(feed.feed.published)} • {feed.source.name}
