@@ -37,7 +37,9 @@ export default function Layout() {
       <div className="flex w-full min-h-screen">
         <AppSidebar />
         <div className="flex flex-col flex-1">
-          <header className="border-b py-4">
+          <header
+            className="border-b py-4 bg-white z-50 sticky top-0 sm:static sm:z-auto"
+          >
             <div className="flex lg:px-3 h-5 items-center space-x-3 text-sm">
               <SidebarTrigger />
               <Separator orientation="vertical" />
