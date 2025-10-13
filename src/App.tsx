@@ -2,18 +2,7 @@ import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import Loading from "@/pages/Loading";
 import Layout from "@/components/layout";
-import ReactGA from "react-ga4";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-
-export function usePageTracking() {
-  const location = useLocation();
-
-  useEffect(() => {
-    ReactGA.send({ hitType: "pageview", page: location.pathname + location.search });
-  }, [location]);
-}
-
+import AnalyticsTracker from "@/hooks/AnalyticsTracker";
 
 /* Static pages */
 const NotFound = lazy(() => import("@/pages/static/NotFound"));
@@ -32,12 +21,10 @@ const WordCoOccurences = lazy(() => import("@/pages/WordCoOccurences"));
 const LiveAnalysisKeyword = lazy(() => import("@/pages/LiveAnalysisKeyword"));
 const LiveAnalysisRss = lazy(() => import("@/pages/LiveAnalysisRss"));
 
-
-
 export default function App() {
-  usePageTracking();
   return (
     <Suspense fallback={<Loading />}>
+      <AnalyticsTracker />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Overview />} />
@@ -57,6 +44,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      
     </Suspense>
   );
 } 
