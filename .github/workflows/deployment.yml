@@ -42,17 +42,33 @@ jobs:
             fi
 
             echo "Working directory: $WORK_DIR"
+
             cd "$WORK_DIR"
 
-            # Git pull latest changes
-            git fetch origin
-            git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
-            git reset --hard origin/${{ github.ref_name }}
+            # Backup .env if it exists
+            if [ -f ".env" ]; then
+              echo "Backing up .env"
+              cp .env /tmp/.env.backup
+            fi
+
+            # Remove everything except .env
+            find . -mindepth 1 -maxdepth 1 ! -name '.env' -exec rm -rf {} +
+
+            # Re-init repo fresh
+            git init
+            git remote add origin ${{ github.repositoryUrl }}
+            git fetch origin ${{ github.ref_name }}
+            git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+
+            # Restore .env
+            if [ -f /tmp/.env.backup ]; then
+              echo "Restoring .env"
+              mv /tmp/.env.backup .env
+            fi
 
             # Set up Node.js environment (adjust path if needed)
             export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
 
             # Install dependencies and build
-            npm install
             npm ci
             npm run build
