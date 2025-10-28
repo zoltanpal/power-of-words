@@ -106,14 +106,14 @@ export default function Feeds() {
   
         <div className="sm:w-auto">
           <Button
-            size="sm"
+            size="default"
             onClick={() => {
               setPage(1);
               fetchFeeds();
             }}
             className="sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
           >
-            <SearchIcon className="mr-1 w-4 h-4" />
+            <SearchIcon />
             Search
           </Button>
         </div>

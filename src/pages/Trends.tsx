@@ -104,11 +104,11 @@ export default function Trends() {
 
         <div>
           <Button
-            size="sm"
+            size="default"
             onClick={onSearch}
             className="text-white bg-blue-500 hover:bg-blue-600"
           >
-            <SearchIcon className="mr-1 w-4 h-4" />
+            <SearchIcon />
             Search
           </Button>
         </div>
