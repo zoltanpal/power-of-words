@@ -44,15 +44,19 @@ jobs:
             echo "Working directory: $WORK_DIR"
             cd "$WORK_DIR"
 
-            # Git pull latest changes
+            # Fetch and reset to remote branch
             git fetch origin
-            git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+
+            # Discard all local changes but keep .env
             git reset --hard origin/${{ github.ref_name }}
+            git clean -fdx -e .env
+
+            # Make sure we are on the right branch
+            git checkout -B ${{ github.ref_name }} origin/${{ github.ref_name }}
 
             # Set up Node.js environment (adjust path if needed)
             export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
 
             # Install dependencies and build
-            npm install
             npm ci
             npm run build
