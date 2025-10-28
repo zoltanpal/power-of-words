@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertTitle } from "@/components/ui/alert"
 
 import { SearchIcon } from "lucide-react";
 import { addDays } from "date-fns"
@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox"
 import Loading from "@/components/elements/Loading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import TrendingPhrasesTable from "@/components/charts/TrendingPhrasesTable";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
 import { DateRangePicker } from "@/components/elements/DateRangePicker";
 
@@ -138,9 +137,9 @@ export default function PhraseFrequencyTrends() {
                     <Loading text="Loading data..." />
                 ) : apiData.length > 0 ? (
                     <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                        <div className="sm:w-2/3 flex flex-col">
+                        {/* <div className="sm:w-2/3 flex flex-col">
                             <div className="mt-4">
-                                <TrendingPhrasesTable data={apiData} groupMode={dateGroup} />
+                                // placeholder for displaying the data
                             </div>
                         </div>
                         <div className="sm:w-1/3 pt-22">
@@ -152,7 +151,7 @@ export default function PhraseFrequencyTrends() {
                                 <li><b>Rank</b> indicates the order of importance in that source for the period.</li>
                                 <li><b>Frequency</b> shows how many times the phrase was mentioned.</li>
                             </ul>
-                        </div>
+                        </div> */}
                     </div>
                 ) : (
                     <p className="text-muted-foreground text-lg text-center py-8">
