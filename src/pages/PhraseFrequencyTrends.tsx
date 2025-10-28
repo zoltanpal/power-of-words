@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+
 import { SearchIcon } from "lucide-react";
 import { addDays } from "date-fns"
 import { Button } from "@/components/ui/button";
@@ -67,6 +69,10 @@ export default function PhraseFrequencyTrends() {
 
     return (
         <div>
+            <Alert className='border-destructive bg-destructive/10 
+                text-destructive rounded-none border-0 border-l-6 mb-2'>
+                <AlertTitle>No data yet!</AlertTitle>
+            </Alert>
             <div className="mb-4">
                 <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
                     Discover which phrases appear most often in news headlines. 
