@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SearchIcon } from "lucide-react";
 import { addDays } from "date-fns"
 import { Button } from "@/components/ui/button";
-// import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox"
 import Loading from "@/components/elements/Loading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import TrendingPhrasesTable from "@/components/charts/TrendingPhrasesTable";
@@ -52,7 +52,7 @@ export default function PhraseFrequencyTrends() {
         setLoadingData(true);
 
         try {
-            const response = await fetch(`localhost:1985/pow/phrase_frequency_trends?${apiParams.toString()}`, {
+            const response = await fetch(`${API_HOST}/phrase_frequency_trends?${apiParams.toString()}`, {
                 headers: { Authorization: `Bearer ${API_TOKEN}` },
             });
             const result = await response.json();
@@ -107,7 +107,7 @@ export default function PhraseFrequencyTrends() {
                         </ToggleGroupItem>
                     </ToggleGroup>
                 </div>
-                {/* <div className="flex items-center gap-2 py-2">
+                <div className="flex items-center gap-2 py-2">
                     <Checkbox 
                         id="excludeName" 
                         checked={excludeName} 
@@ -116,7 +116,7 @@ export default function PhraseFrequencyTrends() {
                     <label htmlFor="excludeName" className="">
                         Exclude names
                     </label>
-                </div> */}
+                </div>
                 <div>
                     <Button
                         size="sm"
@@ -150,7 +150,7 @@ export default function PhraseFrequencyTrends() {
                     </div>
                 ) : (
                     <p className="text-muted-foreground text-lg text-center py-8">
-                        No data found for the selected keyword and date range.
+                        No data found.
                     </p>
                 )}
             </div>
