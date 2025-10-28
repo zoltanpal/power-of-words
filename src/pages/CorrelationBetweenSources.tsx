@@ -102,11 +102,11 @@ export default function CorrelationBetweenSources() {
         </div>
         <div>
           <Button
-            size="sm"
+            size="default"
             onClick={onSearch}
             className="text-white bg-blue-500 hover:bg-blue-600"
           >
-            <SearchIcon className="mr-1" /> Search
+            <SearchIcon /> Search
           </Button>
         </div>     
 

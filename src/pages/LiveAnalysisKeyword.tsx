@@ -154,11 +154,11 @@ export default function LiveAnalysisKeyword() {
           </div>
 
           <Button
-            size="sm"
+            size="default"
             onClick={onSearch}
             className="text-white bg-blue-500 hover:bg-blue-600"
           >
-            <SearchIcon className="mr-2 h-4 w-4" />
+            <SearchIcon />
             Start Full Analysis
           </Button>
         </div>

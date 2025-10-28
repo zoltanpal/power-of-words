@@ -100,11 +100,11 @@ export default function BiasDetection() {
     
           <div className="sm:w-auto">
             <Button
-              size="sm"
+              size="default"
               onClick={onSearch}
               className="sm:w-auto text-white bg-blue-500 hover:bg-blue-600"
             >
-              <SearchIcon className="mr-1" /> Search
+              <SearchIcon /> Search
             </Button>
           </div>
         </div>
