@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Alert, AlertTitle } from "@/components/ui/alert"
+import _ from "lodash";
 
 import { SearchIcon } from "lucide-react";
 import { addDays } from "date-fns"
@@ -10,19 +11,24 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
 import { DateRangePicker } from "@/components/elements/DateRangePicker";
 
-const API_HOST = import.meta.env.VITE_API_HOST;
-const API_TOKEN = import.meta.env.VITE_DEVAPI_HOST;
+// const API_HOST = import.meta.env.VITE_API_HOST;
+const VITE_DEVAPI_HOST = import.meta.env.VITE_DEVAPI_HOST;
+const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
 export default function PhraseFrequencyTrends() {
     const [loadingData, setLoadingData] = useState(false);
     const [apiData, setApiData] = useState<any[]>([]);
     const [dateGroup, setDateGroup] = useState<string>("month");
     const [sources, setSources] = useState<string[]>([]);
+
+    const [groupedByPhrase, setGroupedByPhrase] = useState<any[]>([]);
+
     const [excludeName, setExcludeName] = useState(true);
     const [range, setRange] = useState<{ from: Date; to: Date }>(() => {
-        const to = new Date();
         const from = new Date();
-        from.setDate(to.getDate() - 6);
+        const to = new Date();
+
+        from.setDate(to.getDate() - 30);
         return { from, to };
     });
 
@@ -33,6 +39,22 @@ export default function PhraseFrequencyTrends() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if (!apiData?.length) return;
+
+
+        const groupedBySource = _.groupBy(apiData, "source");
+        const groupedByDate = _.groupBy(apiData, "date_group");
+
+        // const groupedByPhrase = _.groupBy(apiData, "phrase");
+        setGroupedByPhrase(Object.values(_.groupBy(apiData, "phrase")));
+        
+        // console.log("grouped groupedByPhrase:", groupedByPhrase);
+        // console.log("grouped groupedByDate:", groupedByDate);
+
+    }, [apiData]);
+
 
     const fetchData = async () => {
         const start = range.from.toISOString().split("T")[0];
@@ -53,7 +75,7 @@ export default function PhraseFrequencyTrends() {
         setLoadingData(true);
 
         try {
-            const response = await fetch(`${API_HOST}/phrase_frequency_trends?${apiParams.toString()}`, {
+            const response = await fetch(`${VITE_DEVAPI_HOST}/phrase_frequency_trends?${apiParams.toString()}`, {
                 headers: { Authorization: `Bearer ${API_TOKEN}` },
             });
             const result = await response.json();
@@ -137,12 +159,18 @@ export default function PhraseFrequencyTrends() {
                     <Loading text="Loading data..." />
                 ) : apiData.length > 0 ? (
                     <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                        {/* <div className="sm:w-2/3 flex flex-col">
+                        <div className="sm:w-2/3 flex flex-col">
                             <div className="mt-4">
-                                // placeholder for displaying the data
+                            {groupedByPhrase.map((item) => (
+                                    <>
+                                        {item}
+                                        {/* {item.phrase} - {item.freq} occurrences - {item.source}, week: {item.date_group} */}
+                                    </>
+
+                            ))}
                             </div>
                         </div>
-                        <div className="sm:w-1/3 pt-22">
+                        {/* <div className="sm:w-1/3 pt-22">
                             <h1 className="text-2xl">📌 What This Table Shows</h1>
                             <ul className="my-3 ml-4 list-disc [&>li]:mt-2 text-l text-muted-foreground">
                                 <li>The <b>most frequent phrases</b> appearing in Hungarian news headlines.</li>
