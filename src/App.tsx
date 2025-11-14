@@ -20,6 +20,7 @@ const RawDataViewer = lazy(() => import("@/pages/RawDataViewer"));
 const WordCoOccurences = lazy(() => import("@/pages/WordCoOccurences"));
 const LiveAnalysisKeyword = lazy(() => import("@/pages/LiveAnalysisKeyword"));
 const LiveAnalysisRss = lazy(() => import("@/pages/LiveAnalysisRss"));
+const OverallStatistics = lazy(() => import("@/pages/OverallStatistics"));
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="word_co_occurences" element={<WordCoOccurences />} />
           <Route path="live_analysis_keyword" element={<LiveAnalysisKeyword />} />
           <Route path="live_analysis_rss" element={<LiveAnalysisRss />} />
+          <Route path="statistics" element={<OverallStatistics />} />
           
           <Route path="about" element={<About />} />
           <Route path="tech_stack" element={<TechStack />} />

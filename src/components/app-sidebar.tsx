@@ -12,6 +12,7 @@ import {
   ZapIcon,
   Link2Icon,
   //TableIcon
+  DatabaseIcon,
 } from "lucide-react";
 
 import {
@@ -31,6 +32,7 @@ import { SidebarMenuGroup } from "@/components/elements/SidebarMenuGroup";
 const mainMenuItems = [
   { title: "Overview", url: "/", icon: Target },
   { title: "Feeds", url: "/feeds", icon: RssIcon },
+  
 ];
 
 const analyticsMenuItems = [
@@ -46,6 +48,11 @@ const liveAnalyticsMenuItems = [
   { title: "Search by Keyword", url: "/live_analysis_keyword", icon: SearchIcon },
   //{ title: "Monitor RSS Feeds", url: "/live_analysis_rss", icon: RadioReceiverIcon }
 ];
+
+const otherMenuItems = [
+  { title: "Statistics", url: "/statistics", icon: DatabaseIcon },
+  //{ title: "Settings", url: "/settings", icon: SettingsIcon },
+];  
 
 const footerMenuItems = [
   { title: "About", url: "/about", icon: InfoIcon },
@@ -70,6 +77,8 @@ export function AppSidebar() {
           <SidebarMenuGroup items={mainMenuItems} />
           <SidebarMenuGroup items={analyticsMenuItems} label="Historycal Analytics" />
           <SidebarMenuGroup items={liveAnalyticsMenuItems} label="Live Analysis" />
+          <SidebarMenuGroup items={otherMenuItems} label="Others" />
+
         </SidebarGroup>
       </SidebarContent>
 
