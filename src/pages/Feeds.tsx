@@ -57,7 +57,7 @@ export default function Feeds() {
     }
 
     if (freeText) {
-      apiParams.set("free_text", freeText);
+      apiParams.set("free_text", freeText.trim().toLocaleLowerCase());
     }
 
     const url = `${API_HOST}/feeds?${apiParams.toString()}`;

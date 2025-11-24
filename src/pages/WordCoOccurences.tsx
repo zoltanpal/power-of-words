@@ -43,7 +43,7 @@ export default function WordCoOccurences() {
         const apiParams = new URLSearchParams({
             start_date: start,
             end_date: end,
-            word: word,
+            word: word.trim().toLocaleLowerCase(),
         });
 
         setLoadingData(true);
