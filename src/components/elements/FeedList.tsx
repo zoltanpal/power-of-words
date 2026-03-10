@@ -21,7 +21,7 @@ function highlightText(text: string, search: string) {
 
 export function FeedList({ feeds, searchedText }: { feeds: any[]; searchedText: string }) {
   if (!feeds?.length) return <p>No feeds found.</p>;
-
+  console.log("Rendering FeedList with feeds:", feeds);
   return (
     <div>
       <ul className="divide-y divide-muted border rounded-md">

@@ -3,7 +3,7 @@ import {
   Target,
   RssIcon,
   TrendingUpIcon,
-  //RadioReceiverIcon,
+  RadioReceiverIcon,
   SearchIcon,
   InfoIcon,
   LinkIcon,
@@ -45,8 +45,8 @@ const analyticsMenuItems = [
 ];
 
 const liveAnalyticsMenuItems = [
-  { title: "Search by Keyword", url: "/live_analysis_keyword", icon: SearchIcon },
-  //{ title: "Monitor RSS Feeds", url: "/live_analysis_rss", icon: RadioReceiverIcon }
+  // { title: "Search by Keyword", url: "/live_analysis_keyword", icon: SearchIcon },
+  { title: "Live News Analysis", url: "/live_analysis_rss", icon: RadioReceiverIcon }
 ];
 
 const otherMenuItems = [
