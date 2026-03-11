@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
 import { FeedList } from "@/components/elements/FeedList2";
 import { SearchIcon } from "lucide-react";
+import CustomPagination from "@/components/elements/CustomPagination";
+
 
 import {
   useAnalysisSession,
@@ -40,6 +42,9 @@ export default function LiveAnalysisRss() {
   const completed = state.completed;
   const total = state.total;
   const analysisResult = state.analysisResult;
+
+  const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(30);
 
   useEffect(() => {
     const fetchSourcesOnce = async () => {
@@ -130,9 +135,16 @@ export default function LiveAnalysisRss() {
     return res.json();
   };
 
-  const pollJobResults = async (currentJobId: string) => {
+  const pollJobResults = async (currentJobId: string, currentPage: number, currentItemsPerPage: number) => {
     try {
-      const res = await fetch(`${DEV_API_HOST}/results/${currentJobId}`, {
+
+      const params = new URLSearchParams({
+        page: String(currentPage - 1),
+        page_size: String(currentItemsPerPage),
+      });
+
+
+      const res = await fetch(`${DEV_API_HOST}/results/${currentJobId}?${params.toString()}`, {
         headers: {
           Authorization: `Bearer ${API_TOKEN}`,
         },
@@ -173,19 +185,56 @@ export default function LiveAnalysisRss() {
     }
   };
 
+  const fetchResultPage = async (
+    currentJobId: string,
+    currentPage: number,
+    currentItemsPerPage: number
+  ) => {
+    try {
+      const params = new URLSearchParams({
+        page: String(currentPage - 1),
+        page_size: String(currentItemsPerPage),
+      });
+
+      const res = await fetch(
+        `${DEV_API_HOST}/results/${currentJobId}?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Fetching page failed: ${res.status}`);
+      }
+
+      const data: AnalysisResult = await res.json();
+
+      setState((prev) => ({
+        ...prev,
+        analysisResult: data,
+        completed: data.completed ?? prev.completed,
+        total: data.total ?? prev.total,
+      }));
+    } catch (err) {
+      console.error("Error fetching result page:", err);
+    }
+  };
+
   useEffect(() => {
     if (!jobId || !loadingAnalysis) return;
 
-    pollJobResults(jobId);
+    pollJobResults(jobId, page, itemsPerPage);
 
     pollingRef.current = setInterval(() => {
-      pollJobResults(jobId);
+      pollJobResults(jobId, page, itemsPerPage);
     }, 2000);
 
     return () => {
       stopPolling();
     };
-  }, [jobId, loadingAnalysis]);
+  }, [jobId, loadingAnalysis, page, itemsPerPage]);
 
   useEffect(() => {
     return () => {
@@ -193,8 +242,19 @@ export default function LiveAnalysisRss() {
     };
   }, []);
 
+  useEffect(() => {
+    setPage(1);
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    if (!jobId || loadingAnalysis) return;
+
+    fetchResultPage(jobId, page, itemsPerPage);
+  }, [jobId, loadingAnalysis, page, itemsPerPage]);
+
   const fetchFeeds = async () => {
     stopPolling();
+    setPage(1);
 
     // Reset state for new analysis
     setState((prev) => ({
@@ -304,13 +364,39 @@ export default function LiveAnalysisRss() {
               {analysisResult.total ?? total}
             </div>
 
-            <FeedList
+            {analysisResult.total > itemsPerPage && (
+              <div className="overflow-x-auto">
+                <CustomPagination
+                  page={page}
+                  setPage={setPage}
+                  total={analysisResult.total}
+                  itemsPerPage={itemsPerPage}
+                  setItemsPerPage={setItemsPerPage}
+                />
+              </div>
+            )}
+
+            <FeedList feeds={analysisResult.items || []} />
+
+            {analysisResult.total > itemsPerPage && (
+              <div className="overflow-x-auto">
+                <CustomPagination
+                  page={page}
+                  setPage={setPage}
+                  total={analysisResult.total}
+                  itemsPerPage={itemsPerPage}
+                  setItemsPerPage={setItemsPerPage}
+                />
+              </div>
+            )}
+
+            {/* <FeedList
                 feeds={[...(analysisResult?.items || [])].sort(
                   (a, b) =>
                     new Date(b.feed.published).getTime() -
                     new Date(a.feed.published).getTime()
                 )}
-              />
+              /> */}
 
             {/* <pre className="rounded-md border p-4 text-xs overflow-auto bg-muted">
               {JSON.stringify(analysisResult, null, 2)}

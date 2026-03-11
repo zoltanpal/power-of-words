@@ -1,0 +1,30 @@
+import { useMemo } from "react";
+import { useAnalysisSession } from "@/hooks/useAnalysisSession";
+import {
+  toFeedList,
+  toSentimentDistribution,
+  toSourceBreakdown,
+} from "@/lib/live_news_analysis/analysis-transformers";
+
+export function useAnalysisData() {
+  const { state } = useAnalysisSession();
+
+  const items = state.items;
+
+  const feedItems = useMemo(() => toFeedList(items), [items]);
+
+  const sourceBreakdown = useMemo(() => toSourceBreakdown(items), [items]);
+
+  const sentimentDistribution = useMemo(
+    () => toSentimentDistribution(items),
+    [items]
+  );
+
+  return {
+    items,
+    feedItems,
+    sourceBreakdown,
+    sentimentDistribution,
+    isReady: state.status === "completed" && state.items.length > 0,
+  };
+}
