@@ -1,6 +1,5 @@
-// import { SentimentBadge } from "@/components/elements/SentimentBadge";
-import { formatDate } from "@/lib/utils";
-
+import { SentimentBadge } from "@/components/elements/SentimentBadge";
+import { formatDate, getHighestSentiment } from "@/lib/utils";
 
 
 export function FeedList({ feeds }: { feeds: any[]; }) {
@@ -26,7 +25,7 @@ export function FeedList({ feeds }: { feeds: any[]; }) {
 
             {/* Right content (sentiment badge) */}
             <div className="sm:ml-6 self-start sm:self-center">
-              {/* <SentimentBadge sentiment={getHighestSentiment(feed.sentiment)} /> */}
+              <SentimentBadge sentiment={getHighestSentiment(feed.sentiment)} />
             </div>
           </li>
         ))}
