@@ -76,8 +76,8 @@ export function AppSidebar() {
           <Separator />
 
           {/* <SidebarMenuGroup items={mainMenuItems} /> */}
-          <SidebarMenuGroup items={analyticsMenuItems} label="Historycal Analytics" />
-          <SidebarMenuGroup items={liveAnalyticsMenuItems} label="Live Analysis" />
+          <SidebarMenuGroup items={analyticsMenuItems} label="Historical Analytics" />
+          <SidebarMenuGroup items={liveAnalyticsMenuItems} label="Live Analytics" />
           <SidebarMenuGroup items={otherMenuItems} label="Others" />
 
         </SidebarGroup>
