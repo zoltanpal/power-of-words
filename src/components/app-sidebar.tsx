@@ -3,7 +3,7 @@ import {
   Target,
   RssIcon,
   TrendingUpIcon,
-  RadioReceiverIcon,
+  ActivityIcon,
   SearchIcon,
   InfoIcon,
   LinkIcon,
@@ -46,7 +46,7 @@ const analyticsMenuItems = [
 
 const liveAnalyticsMenuItems = [
   // { title: "Search by Keyword", url: "/live_analysis_keyword", icon: SearchIcon },
-  { title: "Live News Analysis", url: "/live_analysis_rss", icon: RadioReceiverIcon }
+  { title: "Live News Analysis", url: "/live_news_analysis", icon: ActivityIcon }
 ];
 
 const otherMenuItems = [

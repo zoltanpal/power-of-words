@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { SearchIcon, BarChart3Icon, ListIcon, PieChartIcon } from "lucide-react";
+import { BarChart3Icon, ListIcon, PieChartIcon } from "lucide-react";
 
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
@@ -69,10 +69,9 @@ function LiveAnalysisPageContent() {
     <div className="space-y-6">
       <div className="space-y-4 rounded-xl border p-4">
         <div>
-          <h1 className="text-xl font-semibold">Live RSS Analysis</h1>
+          <h1 className="text-xl font-semibold">Live News Analysis</h1>
           <p className="text-sm text-muted-foreground">
-            Fetch RSS feeds, run sentiment analysis, store the raw dataset in
-            session storage, and reuse it across multiple views.
+            ...
           </p>
         </div>
 
@@ -96,7 +95,7 @@ function LiveAnalysisPageContent() {
             />
           </div>
 
-          <div className="min-w-[260px]">
+          <div className="min-w-[130px]">
             <SourceSelectorMulti
               value={state.selectedSourceIds}
               onChange={(value) =>
@@ -125,7 +124,7 @@ function LiveAnalysisPageContent() {
               disabled={state.loadingAnalysis || loadingSources}
               className="text-white bg-blue-500 hover:bg-blue-600"
             >
-              <SearchIcon className="mr-1 h-4 w-4" />
+              {/* <SearchIcon className="mr-1 h-4 w-4" /> */}
               Start Analysis
             </Button>
           </div>
@@ -169,11 +168,11 @@ function LiveAnalysisPageContent() {
           </div>
         )}
 
-        {state.jobId && (
+        {/* {state.jobId && (
           <div className="text-sm text-muted-foreground">
             Job ID: {state.jobId}
           </div>
-        )}
+        )} */}
 
         {state.loadingAnalysis && (
           <div className="rounded-md border px-3 py-3">
@@ -191,7 +190,7 @@ function LiveAnalysisPageContent() {
         )}
 
         {state.status === "completed" && (
-          <div className="rounded-md border bg-muted/30 px-3 py-2 text-sm">
+          <div className="rounded-md border bg-green-50 px-3 py-2 text-sm">
             Analysis completed. Loaded <span className="font-medium">{items.length}</span>{" "}
             items.
           </div>
@@ -215,7 +214,7 @@ function LiveAnalysisPageContent() {
             disabled={!isReady}
           >
             <BarChart3Icon className="mr-1 h-4 w-4" />
-            Sources
+            Trends
           </Button>
 
           <Button
@@ -236,7 +235,7 @@ function LiveAnalysisPageContent() {
 
         {isReady && activeTab === "feeds" && (
           <div className="space-y-4">
-            <div className="text-sm font-medium">Feed items: {feedItems.length}</div>
+            {/* <div className="text-sm font-medium">Feed items: {feedItems.length}</div> */}
 
             {feedItems.length > itemsPerPage && (
               <div className="overflow-x-auto">

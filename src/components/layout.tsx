@@ -13,7 +13,7 @@ const routeTitleMap: Record<string, string> = {
   "/advanced_analytics": "Advanced Analytics",
   "/extreme_detection": "Extreme Sentiment Detection",
   "/live_analysis_keyword": "Live Sentiment Analysis by Keyword",
-  "/live_analysis_rss": "Live Sentiment Analysis from RSS",
+  "/live_news_analysis": "Live Sentiment Analysis from News Feeds",
   "/word_co_occurences": "Word Co-Occurrence",
   "/raw_data": "Raw Data Viewer",
   "/statistics": "Overall Statistics",
