@@ -3,6 +3,25 @@ import { twMerge } from "tailwind-merge";
 //import React from "react";
 import moment from 'moment';
 
+
+export function getHighestSentiment(
+  sentiment: Record<string, number>
+): string {
+  const entries = Object.entries(sentiment)
+    .filter(([key]) => key !== "compound")
+    .map(([key, value]) => {
+      if (key === "very_negative") return ["negative", value] as const;
+      if (key === "very_positive") return ["positive", value] as const;
+      return [key, value] as const;
+    });
+
+  const result = entries.reduce((max, current) =>
+    current[1] > max[1] ? current : max
+  );
+
+  return result[0];
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

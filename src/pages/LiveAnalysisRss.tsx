@@ -3,7 +3,7 @@ import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
-import { FeedList } from "@/components/elements/FeedList";
+import { FeedList } from "@/components/elements/FeedList2";
 import { SearchIcon } from "lucide-react";
 
 import {
@@ -196,6 +196,7 @@ export default function LiveAnalysisRss() {
   const fetchFeeds = async () => {
     stopPolling();
 
+    // Reset state for new analysis
     setState((prev) => ({
       ...prev,
       jobId: null,
@@ -206,6 +207,7 @@ export default function LiveAnalysisRss() {
     }));
 
     try {
+      // Start analysis and get job ID
       const data = await fetchStartAnalysis();
 
       setState((prev) => ({
@@ -217,6 +219,7 @@ export default function LiveAnalysisRss() {
       }));
     } catch (err) {
       console.error("Error starting analysis:", err);
+      
       setState((prev) => ({
         ...prev,
         loadingAnalysis: false,
@@ -301,11 +304,17 @@ export default function LiveAnalysisRss() {
               {analysisResult.total ?? total}
             </div>
 
-            {/* <FeedList feeds={analysisResult?.items || []}  searchedText="" /> */}
+            <FeedList
+                feeds={[...(analysisResult?.items || [])].sort(
+                  (a, b) =>
+                    new Date(b.feed.published).getTime() -
+                    new Date(a.feed.published).getTime()
+                )}
+              />
 
-            <pre className="rounded-md border p-4 text-xs overflow-auto bg-muted">
+            {/* <pre className="rounded-md border p-4 text-xs overflow-auto bg-muted">
               {JSON.stringify(analysisResult, null, 2)}
-            </pre>
+            </pre> */}
           </div>
         )}
       </div>
