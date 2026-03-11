@@ -4,7 +4,6 @@ import {
   RssIcon,
   TrendingUpIcon,
   ActivityIcon,
-  SearchIcon,
   InfoIcon,
   LinkIcon,
   ScaleIcon,

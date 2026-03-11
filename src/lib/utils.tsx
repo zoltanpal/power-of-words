@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 //import React from "react";
 import moment from 'moment';
 
+export type SentimentBadgeType = "negative" | "neutral" | "positive";
 
 export function getHighestSentiment(
   sentiment: Record<string, number>
@@ -19,7 +20,7 @@ export function getHighestSentiment(
     current[1] > max[1] ? current : max
   );
 
-  return result[0];
+  return result[0] as SentimentBadgeType;
 }
 
 export function cn(...inputs: ClassValue[]) {
