@@ -13,5 +13,5 @@ export default function AnalyticsTracker() {
     ReactGA.send({ hitType: "pageview", page: location.pathname + location.search });
   }, [location]);
 
-  return null; // this component doesn't render anything visible
+  return null;
 }

@@ -28,13 +28,15 @@ const version = pkg.version;
 import { Separator } from "@/components/ui/separator";
 import { SidebarMenuGroup } from "@/components/elements/SidebarMenuGroup";
 
-const mainMenuItems = [
-  { title: "Overview", url: "/", icon: Target },
-  { title: "Feeds", url: "/feeds", icon: RssIcon },
+// const mainMenuItems = [
+//   { title: "Overview", url: "/", icon: Target },
+//   { title: "Feeds", url: "/feeds", icon: RssIcon },
   
-];
+// ];
 
 const analyticsMenuItems = [
+  { title: "Overview", url: "/", icon: Target },
+  { title: "Feeds", url: "/feeds", icon: RssIcon },  
   { title: "Trends", url: "/trends", icon: TrendingUpIcon },
   { title: "Source Correlation", url: "/correlation_between_sources", icon: LinkIcon },
   { title: "Bias Detection", url: "/bias_detection", icon: ScaleIcon },
@@ -73,7 +75,7 @@ export function AppSidebar() {
 
           <Separator />
 
-          <SidebarMenuGroup items={mainMenuItems} />
+          {/* <SidebarMenuGroup items={mainMenuItems} /> */}
           <SidebarMenuGroup items={analyticsMenuItems} label="Historycal Analytics" />
           <SidebarMenuGroup items={liveAnalyticsMenuItems} label="Live Analysis" />
           <SidebarMenuGroup items={otherMenuItems} label="Others" />

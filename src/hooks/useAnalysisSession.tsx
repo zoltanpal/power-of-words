@@ -74,7 +74,6 @@ export function useAnalysisSession() {
   return context;
 }
 
-// Optional helper hooks if you want cleaner imports later
 export function useAnalysisItems(): AnalysisItem[] {
   const { state } = useAnalysisSession();
   return state.items;

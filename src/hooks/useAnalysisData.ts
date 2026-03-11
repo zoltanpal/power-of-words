@@ -1,3 +1,6 @@
+// This hook processes the raw analysis data from the session and transforms it into 
+// formats suitable for different components. 
+// It also provides a ready state to indicate when the data is fully processed and available for use in the UI.
 import { useMemo } from "react";
 import { useAnalysisSession } from "@/hooks/useAnalysisSession";
 import {
@@ -9,10 +12,10 @@ import {
 export function useAnalysisData() {
   const { state } = useAnalysisSession();
 
-  const items = state.items;
-
+  const items = state.items
+  
   const feedItems = useMemo(() => toFeedList(items), [items]);
-
+  
   const sourceBreakdown = useMemo(() => toSourceBreakdown(items), [items]);
 
   const sentimentDistribution = useMemo(
