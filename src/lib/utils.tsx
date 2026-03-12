@@ -7,20 +7,21 @@ export type SentimentBadgeType = "negative" | "neutral" | "positive";
 
 export function getHighestSentiment(
   sentiment: Record<string, number>
-): string {
-  const entries = Object.entries(sentiment)
+): SentimentBadgeType {
+
+  const entries: [SentimentBadgeType, number][] = Object.entries(sentiment)
     .filter(([key]) => key !== "compound")
     .map(([key, value]) => {
-      if (key === "very_negative") return ["negative", value] as const;
-      if (key === "very_positive") return ["positive", value] as const;
-      return [key, value] as const;
+      if (key === "very_negative") return ["negative", value];
+      if (key === "very_positive") return ["positive", value];
+      return [key as SentimentBadgeType, value];
     });
 
   const result = entries.reduce((max, current) =>
     current[1] > max[1] ? current : max
   );
 
-  return result[0] as SentimentBadgeType;
+  return result[0];
 }
 
 export function cn(...inputs: ClassValue[]) {
