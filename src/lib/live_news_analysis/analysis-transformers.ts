@@ -13,9 +13,9 @@ export function toFeedList(items: AnalysisItem[]) {
 export function toSentimentBySource(items: AnalysisItem[]) {
   // const map = new Map<string, number>();
 
-  //items.forEach((item) => {
-    //console.log(item.feed.title, item.feed.published);
-  //});
+  items.forEach((item) => {
+    console.log(item.feed.title, item.feed.published);
+  });
 
   return {}
 

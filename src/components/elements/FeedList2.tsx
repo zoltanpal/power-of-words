@@ -2,7 +2,7 @@ import { SentimentBadge } from "@/components/elements/SentimentBadge";
 import { formatDate, getHighestSentiment } from "@/lib/utils";
 
 
-export function FeedList({ feeds, language }: { feeds: any[]; }) {
+export function FeedList({ feeds, language }: { feeds: any[]; language: string }) {
   if (!feeds?.length) return <p>No feeds found.</p>;
 //   console.log("Rendering FeedList with feeds:", feeds);
   return (

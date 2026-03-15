@@ -3,7 +3,7 @@ import { BarChart3Icon, ListIcon, PieChartIcon } from "lucide-react";
 
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
-import SentimentBySourceChart from "@/components/charts/SentimentBySourceChart";
+// import SentimentBySourceChart from "@/components/charts/SentimentBySourceChart";
 
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
@@ -25,7 +25,7 @@ function LiveAnalysisPageContent() {
   const { sourceOptions, effectiveSourceIds, loadingSources, error: sourceError } =
     useAnalysisSources();
   const { start } = useAnalysisJob();
-  const { items, feedItems, sentimentBySource, sentimentDistribution, isReady } =
+  const { items, feedItems, sentimentDistribution, isReady } =
     useAnalysisData();
 
   const [activeTab, setActiveTab] = useState<AnalysisTab>("feeds");
@@ -271,7 +271,7 @@ function LiveAnalysisPageContent() {
           <div className="space-y-4">
             <div className="text-sm font-medium">Sentiment by source</div>
 
-            <SentimentBySourceChart data={sentimentBySource} />
+            {/* <SentimentBySourceChart data={sentimentBySource} /> */}
           </div>
         )}
 
