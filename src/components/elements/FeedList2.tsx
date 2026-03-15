@@ -2,13 +2,14 @@ import { SentimentBadge } from "@/components/elements/SentimentBadge";
 import { formatDate, getHighestSentiment } from "@/lib/utils";
 
 
-export function FeedList({ feeds }: { feeds: any[]; }) {
+export function FeedList({ feeds, language }: { feeds: any[]; }) {
   if (!feeds?.length) return <p>No feeds found.</p>;
 //   console.log("Rendering FeedList with feeds:", feeds);
   return (
     <div>
       <ul className="divide-y divide-muted border rounded-md">
         {feeds.map((feed, idx) => (
+          // <li><pre>{JSON.stringify(feed, null, 2)}</pre></li>
           <li
             key={idx}
             className="p-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3 hover:bg-gray-50"
@@ -25,7 +26,13 @@ export function FeedList({ feeds }: { feeds: any[]; }) {
 
             {/* Right content (sentiment badge) */}
             <div className="sm:ml-6 self-start sm:self-center">
-              <SentimentBadge sentiment={getHighestSentiment(feed.sentiment)} />
+              {/* <pre>{ JSON.stringify(feed.sentiment) }</pre> */}
+              {/* {feed.sentiment.compound_label ? ( */}
+              {language === "eng" ? (
+                <SentimentBadge sentiment={feed.sentiment.compound_label} />
+              ) : (
+                <SentimentBadge sentiment={getHighestSentiment(feed.sentiment)} />
+              )}
             </div>
           </li>
         ))}

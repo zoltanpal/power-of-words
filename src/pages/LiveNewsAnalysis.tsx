@@ -3,6 +3,8 @@ import { BarChart3Icon, ListIcon, PieChartIcon } from "lucide-react";
 
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
+import SentimentBySourceChart from "@/components/charts/SentimentBySourceChart";
+
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
 import { FeedList } from "@/components/elements/FeedList2";
@@ -23,7 +25,7 @@ function LiveAnalysisPageContent() {
   const { sourceOptions, effectiveSourceIds, loadingSources, error: sourceError } =
     useAnalysisSources();
   const { start } = useAnalysisJob();
-  const { items, feedItems, sourceBreakdown, sentimentDistribution, isReady } =
+  const { items, feedItems, sentimentBySource, sentimentDistribution, isReady } =
     useAnalysisData();
 
   const [activeTab, setActiveTab] = useState<AnalysisTab>("feeds");
@@ -249,7 +251,7 @@ function LiveAnalysisPageContent() {
               </div>
             )}
 
-            <FeedList feeds={paginatedFeedItems} />
+            <FeedList feeds={paginatedFeedItems} language={state.language} />
 
             {feedItems.length > itemsPerPage && (
               <div className="overflow-x-auto">
@@ -267,24 +269,9 @@ function LiveAnalysisPageContent() {
 
         {isReady && activeTab === "sources" && (
           <div className="space-y-4">
-            <div className="text-sm font-medium">Source breakdown</div>
+            <div className="text-sm font-medium">Sentiment by source</div>
 
-            <div className="rounded-md border overflow-hidden">
-              <div className="grid grid-cols-[1fr_auto] gap-2 border-b bg-muted/40 px-4 py-2 text-sm font-medium">
-                <div>Source</div>
-                <div>Count</div>
-              </div>
-
-              {sourceBreakdown.map((row) => (
-                <div
-                  key={row.name}
-                  className="grid grid-cols-[1fr_auto] gap-2 border-b last:border-b-0 px-4 py-2 text-sm"
-                >
-                  <div>{row.name}</div>
-                  <div>{row.count}</div>
-                </div>
-              ))}
-            </div>
+            <SentimentBySourceChart data={sentimentBySource} />
           </div>
         )}
 

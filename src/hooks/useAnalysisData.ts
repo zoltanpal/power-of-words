@@ -6,7 +6,7 @@ import { useAnalysisSession } from "@/hooks/useAnalysisSession";
 import {
   toFeedList,
   toSentimentDistribution,
-  toSourceBreakdown,
+  toSentimentBySource,
 } from "@/lib/live_news_analysis/analysis-transformers";
 
 export function useAnalysisData() {
@@ -16,7 +16,7 @@ export function useAnalysisData() {
   
   const feedItems = useMemo(() => toFeedList(items), [items]);
   
-  const sourceBreakdown = useMemo(() => toSourceBreakdown(items), [items]);
+  const sentimentBySource = useMemo(() => toSentimentBySource(items), [items]);
 
   const sentimentDistribution = useMemo(
     () => toSentimentDistribution(items),
@@ -26,7 +26,7 @@ export function useAnalysisData() {
   return {
     items,
     feedItems,
-    sourceBreakdown,
+    sentimentBySource,
     sentimentDistribution,
     isReady: state.status === "completed" && state.items.length > 0,
   };

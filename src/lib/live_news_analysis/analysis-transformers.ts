@@ -10,17 +10,15 @@ export function toFeedList(items: AnalysisItem[]) {
   });
 }
 
-export function toSourceBreakdown(items: AnalysisItem[]) {
-  const map = new Map<string, number>();
+export function toSentimentBySource(items: AnalysisItem[]) {
+  // const map = new Map<string, number>();
 
-  items.forEach((item) => {
-    const key = item.feed.source_name || "Unknown";
-    map.set(key, (map.get(key) || 0) + 1);
-  });
+  //items.forEach((item) => {
+    //console.log(item.feed.title, item.feed.published);
+  //});
 
-  return Array.from(map.entries())
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count);
+  return {}
+
 }
 
 export function toSentimentDistribution(items: AnalysisItem[]) {
