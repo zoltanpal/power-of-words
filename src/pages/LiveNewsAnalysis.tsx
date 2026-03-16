@@ -3,8 +3,9 @@ import { BarChart3Icon, ListIcon, PieChartIcon } from "lucide-react";
 
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
+import WordCloudChart from "@/components/charts/WordCloudChart";
 // import SentimentBySourceChart from "@/components/charts/SentimentBySourceChart";
-
+import { CardSentiment } from "@/components/elements/CardSentiment";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
 import { FeedList } from "@/components/elements/FeedList2";
@@ -18,6 +19,14 @@ import { useAnalysisSources } from "@/hooks/useAnalysisSources";
 import { useAnalysisJob } from "@/hooks/useAnalysisJob";
 import { useAnalysisData } from "@/hooks/useAnalysisData";
 
+import {
+  Card,
+  // CardHeader,
+  // CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+
+
 type AnalysisTab = "feeds" | "sources" | "sentiment";
 
 function LiveAnalysisPageContent() {
@@ -25,7 +34,7 @@ function LiveAnalysisPageContent() {
   const { sourceOptions, effectiveSourceIds, loadingSources, error: sourceError } =
     useAnalysisSources();
   const { start } = useAnalysisJob();
-  const { items, feedItems, sentimentDistribution, isReady } =
+  const { items, feedItems, mostCommonWords, sentimentsCount, isReady } =
     useAnalysisData();
 
   const [activeTab, setActiveTab] = useState<AnalysisTab>("feeds");
@@ -277,23 +286,44 @@ function LiveAnalysisPageContent() {
 
         {isReady && activeTab === "sentiment" && (
           <div className="space-y-4">
-            <div className="text-sm font-medium">Sentiment distribution</div>
+            <div className="flex flex-col-reverse lg:flex-row gap-4">
+              <div className="w-full lg:w-1/4 flex flex-col gap-2 px-4 py-2">
 
-            <div className="rounded-md border overflow-hidden">
-              <div className="grid grid-cols-[1fr_auto] gap-2 border-b bg-muted/40 px-4 py-2 text-sm font-medium">
-                <div>Sentiment</div>
-                <div>Count</div>
+                <CardSentiment
+                  title="Positive"
+                  curr_value={sentimentsCount.find((s) => s.name === "positive")?.value}
+                  prev_value={sentimentsCount.find((s) => s.name === "positive")?.value}
+                  type="positive"
+                  loading={false}
+                />
+
+                <CardSentiment
+                  title="Negative"
+                  curr_value={sentimentsCount.find((s) => s.name === "negative")?.value}
+                  prev_value={sentimentsCount.find((s) => s.name === "negative")?.value}
+                  type="negative"
+                  loading={false}
+                />
+
+                <CardSentiment
+                  title="Neutral"
+                  curr_value={sentimentsCount.find((s) => s.name === "neutral")?.value}
+                  prev_value={sentimentsCount.find((s) => s.name === "neutral")?.value}
+                  type="neutral"
+                  loading={false}
+                />
+
               </div>
 
-              {sentimentDistribution.map((row) => (
-                <div
-                  key={row.name}
-                  className="grid grid-cols-[1fr_auto] gap-2 border-b last:border-b-0 px-4 py-2 text-sm"
-                >
-                  <div>{row.name}</div>
-                  <div>{row.value}</div>
-                </div>
-              ))}
+              
+
+              <div className="w-full lg:w-3/4">
+                <Card className="h-full min-h-[300px]">
+                  <CardContent className="px-2 h-full">
+                      <WordCloudChart seriesData={mostCommonWords} startDate="" endDate="" />
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         )}

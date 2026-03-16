@@ -7,6 +7,8 @@ import {
   toFeedList,
   toSentimentDistribution,
   toSentimentBySource,
+  toSentimentsCount,
+  toMostCommonWords,
 } from "@/lib/live_news_analysis/analysis-transformers";
 
 export function useAnalysisData() {
@@ -18,6 +20,9 @@ export function useAnalysisData() {
   
   const sentimentBySource = useMemo(() => toSentimentBySource(items), [items]);
 
+  const sentimentsCount = useMemo(() => toSentimentsCount(items), [items]);
+  const mostCommonWords = useMemo(() => toMostCommonWords(items), [items]);
+
   const sentimentDistribution = useMemo(
     () => toSentimentDistribution(items),
     [items]
@@ -28,6 +33,8 @@ export function useAnalysisData() {
     feedItems,
     sentimentBySource,
     sentimentDistribution,
+    sentimentsCount,
+    mostCommonWords,
     isReady: state.status === "completed" && state.items.length > 0,
   };
 }
