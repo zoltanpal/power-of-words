@@ -27,6 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { TopFeeds } from "@/components/elements/TopFeeds";
 
 
@@ -326,14 +327,14 @@ function LiveAnalysisPageContent() {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <pre>{JSON.stringify(topPositiveFeeds, null, 2)}</pre>
-                {/* <Card>
+                <Card>
                 <CardHeader className="px-4">
                   <CardTitle className="text-2xl">Top 5 Positive Feeds</CardTitle>
                 </CardHeader>
                 <CardContent className="px-3 pt-0 -mt-5">
                   <TopFeeds value={topPositiveFeeds} loading={false} />
                 </CardContent>
-              </Card> */}
+              </Card>
 
 
             </div>
