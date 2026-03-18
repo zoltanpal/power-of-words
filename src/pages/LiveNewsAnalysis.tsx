@@ -5,7 +5,7 @@ import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
 import WordCloudChart from "@/components/charts/WordCloudChart";
 // import SentimentBySourceChart from "@/components/charts/SentimentBySourceChart";
-import { CardSentiment } from "@/components/elements/CardSentiment";
+import { CardSentimentSimple } from "@/components/elements/CardSentimentSimple";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/elements/Loading";
 import { FeedList } from "@/components/elements/FeedList2";
@@ -24,7 +24,11 @@ import {
   // CardHeader,
   // CardTitle,
   CardContent,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
+import { TopFeeds } from "@/components/elements/TopFeeds";
+
 
 
 type AnalysisTab = "feeds" | "sources" | "sentiment";
@@ -34,7 +38,7 @@ function LiveAnalysisPageContent() {
   const { sourceOptions, effectiveSourceIds, loadingSources, error: sourceError } =
     useAnalysisSources();
   const { start } = useAnalysisJob();
-  const { items, feedItems, mostCommonWords, sentimentsCount, isReady } =
+  const { items, feedItems, mostCommonWords, sentimentsCount, topPositiveFeeds, isReady } =
     useAnalysisData();
 
   const [activeTab, setActiveTab] = useState<AnalysisTab>("feeds");
@@ -289,33 +293,28 @@ function LiveAnalysisPageContent() {
             <div className="flex flex-col-reverse lg:flex-row gap-4">
               <div className="w-full lg:w-1/4 flex flex-col gap-2 px-4 py-2">
 
-                <CardSentiment
+                <CardSentimentSimple
                   title="Positive"
-                  curr_value={sentimentsCount.find((s) => s.name === "positive")?.value}
-                  prev_value={sentimentsCount.find((s) => s.name === "positive")?.value}
+                  value={sentimentsCount.find((s) => s.name === "positive")?.value}
                   type="positive"
                   loading={false}
                 />
 
-                <CardSentiment
+                <CardSentimentSimple
                   title="Negative"
-                  curr_value={sentimentsCount.find((s) => s.name === "negative")?.value}
-                  prev_value={sentimentsCount.find((s) => s.name === "negative")?.value}
+                  value={sentimentsCount.find((s) => s.name === "negative")?.value}
                   type="negative"
                   loading={false}
                 />
 
-                <CardSentiment
+                <CardSentimentSimple
                   title="Neutral"
-                  curr_value={sentimentsCount.find((s) => s.name === "neutral")?.value}
-                  prev_value={sentimentsCount.find((s) => s.name === "neutral")?.value}
+                  value={sentimentsCount.find((s) => s.name === "neutral")?.value}
                   type="neutral"
                   loading={false}
                 />
 
               </div>
-
-              
 
               <div className="w-full lg:w-3/4">
                 <Card className="h-full min-h-[300px]">
@@ -324,6 +323,19 @@ function LiveAnalysisPageContent() {
                   </CardContent>
                 </Card>
               </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <pre>{JSON.stringify(topPositiveFeeds, null, 2)}</pre>
+                {/* <Card>
+                <CardHeader className="px-4">
+                  <CardTitle className="text-2xl">Top 5 Positive Feeds</CardTitle>
+                </CardHeader>
+                <CardContent className="px-3 pt-0 -mt-5">
+                  <TopFeeds value={topPositiveFeeds} loading={false} />
+                </CardContent>
+              </Card> */}
+
+
             </div>
           </div>
         )}

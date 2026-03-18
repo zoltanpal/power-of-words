@@ -17,9 +17,11 @@ export function toFeedList(items: AnalysisItem[]) {
 export function toSentimentBySource(items: AnalysisItem[]) {
   // const map = new Map<string, number>();
 
-  items.forEach((item) => {
-    console.log(item.feed.title, item.feed.published);
-  });
+  // items.forEach((item) => {
+  //   const source = item.feed.source_name || "unknown";
+  //   const sentiment = item.sentiment?.sentiment_label || "unknown";
+  //   // map.set(source, (map.get(source) || 0) + sentiment);
+  // });
 
   return {}
 
@@ -40,9 +42,7 @@ export function toSentimentsCount(items: AnalysisItem[]) {
   const map = new Map<string, number>();
 
   items.forEach((item) => {
-    console.log(item)
-    // TODO: this is a temporary solution, we should use the sentiment_key instead of compound_label
-    const key = item.sentiment?.compound_label || "unknown"; 
+    const key = item.sentiment?.sentiment_label || "unknown";
     map.set(key, (map.get(key) || 0) + 1);
   });
 
@@ -70,5 +70,21 @@ export function toMostCommonWords(items: AnalysisItem[]) {
   return [...map.entries()]
     .map(([name, weight]) => ({ name, weight }))
     .sort((a, b) => b.weight - a.weight)
-    .slice(0, 20);
+    .slice(0, 40);
+}
+
+export function toTopFeedItems(items: AnalysisItem[], sentimentKey: string) {
+  return items
+    .filter((item) => item.sentiment?.sentiment_key === sentimentKey)
+    .sort((a, b) => {
+      const aScore = a.sentiment?.sentiment_value ?? 0;
+      const bScore = b.sentiment?.sentiment_value ?? 0;
+
+      if (sentimentKey === "negative") {
+        return aScore - bScore;
+      }
+
+      return bScore - aScore;
+    })
+    .slice(0, 5);
 }

@@ -9,6 +9,7 @@ import {
   toSentimentBySource,
   toSentimentsCount,
   toMostCommonWords,
+  toTopFeedItems,
 } from "@/lib/live_news_analysis/analysis-transformers";
 
 export function useAnalysisData() {
@@ -22,6 +23,11 @@ export function useAnalysisData() {
 
   const sentimentsCount = useMemo(() => toSentimentsCount(items), [items]);
   const mostCommonWords = useMemo(() => toMostCommonWords(items), [items]);
+  const topPositiveFeeds = useMemo(() => toTopFeedItems(items, "positive"), [items]);
+  const topNegativeFeeds = useMemo(() => toTopFeedItems(items, "negative"), [items]);
+
+  console.log(topPositiveFeeds)
+
 
   const sentimentDistribution = useMemo(
     () => toSentimentDistribution(items),
@@ -35,6 +41,8 @@ export function useAnalysisData() {
     sentimentDistribution,
     sentimentsCount,
     mostCommonWords,
+    topPositiveFeeds,
+    topNegativeFeeds,
     isReady: state.status === "completed" && state.items.length > 0,
   };
 }
