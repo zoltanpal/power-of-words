@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { BarChart3Icon, ListIcon, PieChartIcon, TargetIcon } from "lucide-react";
+import { BarChart3Icon, ListIcon, TargetIcon } from "lucide-react";
 
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";

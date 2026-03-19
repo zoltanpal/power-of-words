@@ -73,21 +73,11 @@ export function toMostCommonWords(items: AnalysisItem[]) {
 }
 
 export function toTopFeedItems(items: AnalysisItem[], sentimentKey: string) {
-  const feeds = items.map((item) => {
-    return {
-      title: item.feed.title,
-      source_name: item.feed.source_name,
-      published: item.feed.published,
-      sentiment_value: item.sentiment?.sentiment_value ?? 0,
-      sentiment_label: item.sentiment?.sentiment_label ?? "unknown",
-    };
-  });
-
-  return feeds
-    .filter((item) => item.sentiment_label === sentimentKey)
+  const topFeeds = items
+    .filter((item) => item.sentiment?.sentiment_label === sentimentKey)
     .sort((a, b) => {
-      const aScore = a.sentiment_value ?? 0;
-      const bScore = b.sentiment_value ?? 0;
+      const aScore = a.sentiment?.sentiment_value ?? 0;
+      const bScore = b.sentiment?.sentiment_value ?? 0;
 
       if (sentimentKey === "negative") {
         return aScore - bScore;
@@ -96,4 +86,15 @@ export function toTopFeedItems(items: AnalysisItem[], sentimentKey: string) {
       return bScore - aScore;
     })
     .slice(0, 5);
+
+  return topFeeds.map((item) => {
+    return {
+      title: item.feed.title,
+      source_name: item.feed.source_name,
+      published: item.feed.published,
+      // sentiment_value: item.sentiment?.sentiment_value ?? 0,
+      // sentiment_label: item.sentiment?.sentiment_label ?? "unknown",
+    };
+  });
+
 }
