@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { BarChart3Icon, ListIcon, PieChartIcon } from "lucide-react";
+import { BarChart3Icon, ListIcon, PieChartIcon, TargetIcon } from "lucide-react";
 
 import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
 import { SourceSelectorMulti } from "@/components/elements/SourceSelectorMulti";
@@ -32,17 +32,17 @@ import { TopFeeds } from "@/components/elements/TopFeeds";
 
 
 
-type AnalysisTab = "feeds" | "sources" | "sentiment";
+type AnalysisTab = "overview" | "feeds" | "sources";
 
 function LiveAnalysisPageContent() {
   const { state, setState, resetState } = useAnalysisSession();
   const { sourceOptions, effectiveSourceIds, loadingSources, error: sourceError } =
     useAnalysisSources();
   const { start } = useAnalysisJob();
-  const { items, feedItems, mostCommonWords, sentimentsCount, topPositiveFeeds, isReady } =
+  const { items, feedItems, mostCommonWords, sentimentsCount, topPositiveFeeds, topNegativeFeeds, isReady } =
     useAnalysisData();
 
-  const [activeTab, setActiveTab] = useState<AnalysisTab>("feeds");
+  const [activeTab, setActiveTab] = useState<AnalysisTab>("overview");
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(30);
 
@@ -216,6 +216,15 @@ function LiveAnalysisPageContent() {
       <div className="space-y-4 rounded-xl border p-4">
         <div className="flex flex-wrap gap-2">
           <Button
+            variant={activeTab === "overview" ? "default" : "outline"}
+            onClick={() => setActiveTab("overview")}
+            disabled={!isReady}
+          >
+            <TargetIcon className="mr-1 h-4 w-4" />
+            Overview
+          </Button>
+
+          <Button
             variant={activeTab === "feeds" ? "default" : "outline"}
             onClick={() => setActiveTab("feeds")}
             disabled={!isReady}
@@ -233,14 +242,7 @@ function LiveAnalysisPageContent() {
             Trends
           </Button>
 
-          <Button
-            variant={activeTab === "sentiment" ? "default" : "outline"}
-            onClick={() => setActiveTab("sentiment")}
-            disabled={!isReady}
-          >
-            <PieChartIcon className="mr-1 h-4 w-4" />
-            Sentiment
-          </Button>
+
         </div>
 
         {!isReady && !state.loadingAnalysis && (
@@ -289,7 +291,7 @@ function LiveAnalysisPageContent() {
           </div>
         )}
 
-        {isReady && activeTab === "sentiment" && (
+        {isReady && activeTab === "overview" && (
           <div className="space-y-4">
             <div className="flex flex-col-reverse lg:flex-row gap-4">
               <div className="w-full lg:w-1/4 flex flex-col gap-2 px-4 py-2">
@@ -325,9 +327,9 @@ function LiveAnalysisPageContent() {
                 </Card>
               </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <pre>{JSON.stringify(topPositiveFeeds, null, 2)}</pre>
-                <Card>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Card>
                 <CardHeader className="px-4">
                   <CardTitle className="text-2xl">Top 5 Positive Feeds</CardTitle>
                 </CardHeader>
@@ -335,7 +337,14 @@ function LiveAnalysisPageContent() {
                   <TopFeeds value={topPositiveFeeds} loading={false} />
                 </CardContent>
               </Card>
-
+              <Card>
+                <CardHeader className="px-4">
+                  <CardTitle className="text-2xl">Top 5 Negative Feeds</CardTitle>
+                </CardHeader>
+                <CardContent className="px-3 pt-0 -mt-5">
+                  <TopFeeds value={topNegativeFeeds} loading={false} />
+                </CardContent>
+              </Card>
 
             </div>
           </div>

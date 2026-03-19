@@ -1,8 +1,8 @@
 import {
   Mail,
   Target,
-  RssIcon,
-  TrendingUpIcon,
+  // RssIcon,
+  // TrendingUpIcon,
   ActivityIcon,
   InfoIcon,
   LinkIcon,
@@ -12,6 +12,8 @@ import {
   Link2Icon,
   //TableIcon
   DatabaseIcon,
+  ListIcon,
+  BarChart3Icon,
 } from "lucide-react";
 
 import {
@@ -36,8 +38,8 @@ import { SidebarMenuGroup } from "@/components/elements/SidebarMenuGroup";
 
 const analyticsMenuItems = [
   { title: "Overview", url: "/", icon: Target },
-  { title: "Feeds", url: "/feeds", icon: RssIcon },  
-  { title: "Trends", url: "/trends", icon: TrendingUpIcon },
+  { title: "Feeds", url: "/feeds", icon: ListIcon },  
+  { title: "Trends", url: "/trends", icon: BarChart3Icon },
   { title: "Source Correlation", url: "/correlation_between_sources", icon: LinkIcon },
   { title: "Bias Detection", url: "/bias_detection", icon: ScaleIcon },
   { title: "Word Co-Occurences", url: "/word_co_occurences", icon: Link2Icon },

@@ -16,7 +16,7 @@ export type AnalysisFeed = {
 
 export type AnalysisSentiment =
   | {
-      sentiment_key?: string;
+      sentiment_label?: string;
       sentiment_value?: number;
       sentiment_compound?: number;
     }
