@@ -1,118 +1,58 @@
 import { useState, useEffect, useRef } from "react";
-import { format, addDays } from "date-fns";
 import { SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
+import { Slider } from "@/components/ui/slider"
 import { ClearableInput } from "@/components/ui/cleareable-input";
 import { PopupAlert } from "@/components/ui/popup-alert";
 import Loading from "@/components/elements/Loading";
-import SingleSelectDropdown from "@/components/elements/SingleSelectDropdown";
-import { SentimentBadge } from "@/components/elements/SentimentBadge";
-import CustomPagination from "@/components/elements/CustomPagination";
-import { getMaxEntry, formatDate } from "@/lib/utils";
 
-const API_HOST = import.meta.env.VITE_API_HOST_SENTIMENT;
+const API_HOST = "https://devapi.palzoltan.net/sentiment_analyzer/live";
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
-type Sentiment = "positive" | "neutral" | "negative";
-const isSentiment = (s: string): s is Sentiment =>
-  ["positive", "neutral", "negative"].includes(s);
+// type Sentiment = "positive" | "neutral" | "negative";
+// const isSentiment = (s: string): s is Sentiment =>
+//   ["positive", "neutral", "negative"].includes(s);
 
 export default function LiveAnalysisKeyword() {
-  const [freeText, setFreeText] = useState("");
-  const [language, setLanguage] = useState("hu");
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any>(null);
-  const [jobId, setJobId] = useState<string | null>(null);
-  const [completed, setCompleted] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [resultsAggregated, setResultsAggregated] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
+  const [windowRangeValue, setWindowRangeValue] = useState<number[]>([6]);
 
-  const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(50);
+  const fetchAggregated = async () => {
 
-  const pollingRef = useRef<NodeJS.Timeout | null>(null);
-
-  const fetchStartAnalysis = async () => {
-    setLoading(true);
-    setResults(null);
-    setPage(0); // reset pagination
-    const today = new Date();
     const params = new URLSearchParams({
-      start_date: format(addDays(today, -30), "yyyy-MM-dd"),
-      word: freeText,
-      lang: language,
+      query: query.trim().toLocaleLowerCase(),
+      window_hours: windowRangeValue[0].toString(),
     });
 
+    const url = `${API_HOST}/analyze?${params.toString()}`;
+
     try {
-      const res = await fetch(`${API_HOST}/start_analysis?${params.toString()}`, {
+      setLoading(true);
+      const response = await fetch(url, {
         headers: { Authorization: `Bearer ${API_TOKEN}` },
       });
-      const data = await res.json();
-      setJobId(data.job_id);
-      setCompleted(data.completed);
-      setTotal(data.total);
+      const result = await response.json();
+      console.log("API response:", result);
+      setResultsAggregated(result);
+      setLoading(false);
     } catch (err) {
       console.error("Error starting analysis:", err);
       setLoading(false);
     }
   };
 
-  const pollJobResults = async () => {
-    if (!jobId) return;
-    try {
-      const res = await fetch(`${API_HOST}/results/${jobId}?page=${page}&page_size=${itemsPerPage}`, {
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
-      });
-      const data = await res.json();
-      setCompleted(data.completed);
-      setTotal(data.total);
-
-      if (data.completed === data.total) {
-        setResults(data);
-        setLoading(false);
-        if (pollingRef.current) clearInterval(pollingRef.current);
-      }
-    } catch (err) {
-      console.error("Polling error:", err);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-    if (jobId && completed < total) {
-      interval = setInterval(pollJobResults, 3000);
-      pollingRef.current = interval;
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [jobId, completed, total]);
-
-  useEffect(() => {
-    const fetchPage = async () => {
-      if (!jobId || completed < total) return;
-
-      try {
-        const res = await fetch(`${API_HOST}/results/${jobId}?page=${page}&page_size=${itemsPerPage}`, {
-          headers: { Authorization: `Bearer ${API_TOKEN}` },
-        });
-        const data = await res.json();
-        setResults(data);
-      } catch (err) {
-        console.error("Error fetching page:", err);
-      }
-    };
-    fetchPage();
-  }, [page, itemsPerPage, jobId, completed, total]);
 
   const onSearch = () => {
-    if (!freeText.trim()) {
+    if (!query.trim()) {
       setShowAlert(true);
       return;
     }
-    fetchStartAnalysis();
+    fetchAggregated();
   };
 
   return (
@@ -125,84 +65,66 @@ export default function LiveAnalysisKeyword() {
         variant="destructive"
       />
 
-      <p className="text-muted-foreground mb-3 text-justify flex items-center gap-2">
-        Start a background analysis for a keyword. You'll see the results once all are processed.
-      </p>
+      <div className="my-2">
+        <div className="flex flex-wrap items-end gap-3">
 
-      <div className="space-y-4 my-2">
-        <div className="flex flex-wrap gap-2 items-center">
-          <div className="min-w-[180px]">
+          <div className="w-[320px] shrink-0">
             <ClearableInput
-              value={freeText}
-              onChange={(e) => setFreeText(e.target.value)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && onSearch()}
-              placeholder="e.g. economy, Ukraine, AI"
-              className="w-56"
+              placeholder="e.g. Tesla, NVDA, oil prices"
+              className="w-full text-2xl h-9 px-2"
               autoComplete="off"
             />
           </div>
-          <div className="min-w-[180px]">
-            <SingleSelectDropdown
-              options={[
-                { value: "hu", label: "Hungarian" },
-                { value: "en", label: "English" },
-              ]}
-              placeholder="Language"
-              defaultValue="hu"
-              onChange={setLanguage}
-            />
+
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="window-hours" className="text-sm">
+              Window hours <b>{windowRangeValue[0]}</b>
+            </Label>
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">6</span>
+
+                <div className="w-[220px]" dir="rtl">
+                  <Slider
+                    id="window-hours"
+                    value={windowRangeValue}
+                    min={6}
+                    max={36}
+                    step={1}
+                    onValueChange={setWindowRangeValue}
+                  />
+                </div>
+
+                <span className="text-xs text-muted-foreground">36</span>
+              </div>
+            </div>
           </div>
 
+          {/* Button */}
           <Button
-            size="default"
+            size="sm"
             onClick={onSearch}
-            className="text-white bg-blue-500 hover:bg-blue-600"
+            className="bg-blue-500 text-white hover:bg-blue-600"
           >
-            <SearchIcon />
-            Start Full Analysis
+            <SearchIcon className="mr-1 h-4 w-4" />
+            Search
           </Button>
         </div>
       </div>
 
-      <div className="my-5">
-        {loading ? (
-          <Loading text="Analyzing feeds, please wait..." />
-        ) : results?.results?.length > 0 ? (
-          <>
-            <ul className="divide-y divide-muted border rounded-md">
-              {results.results.map((item: any, idx: number) => {
-                const topSentiment = getMaxEntry(item.sentiments ?? {})[0];
-                return (
-                  <li
-                    key={idx}
-                    className="p-4 flex flex-col sm:flex-row justify-between hover:bg-gray-50 sm:items-center gap-2"
-                  >
-                    <div>
-                      <p className="text-xl">{item.title}</p>
-                      <span className="font-mono text-gray-500 subpixel-antialiased not-italic">
-                        {formatDate(item.published)} • {item.source?.toLowerCase()}
-                      </span>
-                    </div>
-                    <div className="mx-6">
-                      <SentimentBadge
-                        sentiment={isSentiment(topSentiment) ? topSentiment : "neutral"}
-                      />
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
 
-            <div className="mt-4">
-              {results.total > itemsPerPage && (
-                <CustomPagination
-                  page={page}
-                  setPage={setPage}
-                  total={results.total}
-                  itemsPerPage={itemsPerPage}
-                  setItemsPerPage={setItemsPerPage}
-                />
-              )}
+      <div className="my-5">
+        {loading  ? (
+          <Loading text="Analyzing feeds, please wait..." />
+        ) : resultsAggregated? (
+          <>
+            <h2 className="text-xl font-semibold mb-4">Aggregated Results</h2>
+            <div className="space-y-4">
+              <pre>{JSON.stringify(resultsAggregated, null, 2)}</pre>
             </div>
           </>
         ) : null}
