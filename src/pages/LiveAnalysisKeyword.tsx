@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SearchIcon } from "lucide-react";
+import { MapPinXInside, SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -10,63 +10,106 @@ import Loading from "@/components/elements/Loading";
 const API_HOST = "https://devapi.palzoltan.net/sentiment_analyzer/live";
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
+const sentimentLabelMap: Record<string, string> = {
+  positive: "Positive",
+  negative: "Negative",
+  neutral: "Neutral",
+  mostly_positive: "Mostly Positive",
+  mostly_negative: "Mostly Negative",
+  mixed: "Mixed",
+};
+
+
 export default function LiveAnalysisKeyword() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resultsAggregated, setResultsAggregated] = useState<any>(null);
+  // const [resultsAggregated, setResultsAggregated] = useState<any>(null);
+  // const [resultsHeadlines, setResultsHeadlines] = useState<any>(null);
+  // const [resultsSentimentChange, setResultsSentimentChange] = useState<any>(null);
+
+  const [results, setResults] = useState<{
+    aggregated: any;
+    headlines: any;
+    sentimentChange: any;
+  }>({
+    aggregated: null,
+    headlines: null,
+    sentimentChange: null,
+  });
+
   const [windowRangeValue, setWindowRangeValue] = useState<number[]>([6]);
   const [error, setError] = useState("");
 
-  const fetchAggregated = async () => {
-    const trimmedQuery = query.trim().toLowerCase();
-
+  const buildUrl = (endpoint: string) => {
     const params = new URLSearchParams({
-      query: trimmedQuery,
+      query: query.trim().toLowerCase(),
       window_hours: windowRangeValue[0].toString(),
+      ai_summary: "true",
     });
 
-    const url = `${API_HOST}/analyze?${params.toString()}`;
+    return `${API_HOST}/${endpoint}?${params.toString()}`;
+  };
+
+  const fetchData = async (endpoint: string) => {
+    const response = await fetch(buildUrl(endpoint), {
+      headers: { Authorization: `Bearer ${API_TOKEN}` },
+    });
+
+    if (!response.ok) {
+      throw new Error(`${endpoint} failed with status ${response.status}`);
+    }
+
+    return response.json();
+  };
+
+  const onSearch = async () => {
+    if (!query.trim()) {
+      setError("Please provide a search input.");
+      setResults({
+        aggregated: null,
+        headlines: null,
+        sentimentChange: null,
+      });
+      return;
+    }
+
+    setError("");
+    setLoading(true);
 
     try {
-      setLoading(true);
+      const [aggregated, headlines, sentimentChange] = await Promise.all([
+        fetchData("analyze"),
+        fetchData("headlines"),
+        fetchData("sentiment_change"),
+      ]);
 
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
+      setResults({
+        aggregated,
+        headlines,
+        sentimentChange,
       });
 
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("API response:", result);
-      setResultsAggregated(result);
+      console.log("Aggregated API response:", aggregated);
+      console.log("Headlines API response:", headlines);
+      console.log("Sentiment Change API response:", sentimentChange);
     } catch (err) {
-      console.error("Error starting analysis:", err);
-      setResultsAggregated(null);
+      console.error("Error fetching live analysis:", err);
+      setResults({
+        aggregated: null,
+        headlines: null,
+        sentimentChange: null,
+      });
       setError("Something went wrong while fetching the analysis.");
     } finally {
       setLoading(false);
     }
   };
 
-  const onSearch = () => {
-    if (!query.trim()) {
-      setError("Please provide a search input.");
-      setResultsAggregated(null);
-      setLoading(false);
-      return;
-    }
-
-    setError("");
-    fetchAggregated();
-  };
-
   return (
     <>
       <div className="my-2">
         <div className="flex flex-wrap items-end gap-3">
-          <div className="w-[320px] shrink-0">
+          <div className="relative w-[320px] shrink-0">
             <ClearableInput
               value={query}
               onChange={(e) => {
@@ -75,12 +118,12 @@ export default function LiveAnalysisKeyword() {
               }}
               onKeyDown={(e) => e.key === "Enter" && onSearch()}
               placeholder="e.g. Tesla, NVDA, oil prices"
-              className={`w-full text-2xl h-9 px-2 ${
+              className={`h-9 w-full px-2 text-2xl ${
                 error ? "border-red-500 focus-visible:ring-red-500" : ""
               }`}
               autoComplete="off"
             />
-            {error && <p className="mt-1 text-sm text-red-500 absolute">{error}</p>}
+            {error && <p className="absolute mt-1 text-sm text-red-500">{error}</p>}
           </div>
 
           <div className="flex flex-col gap-1">
@@ -96,13 +139,13 @@ export default function LiveAnalysisKeyword() {
                   id="window-hours"
                   value={windowRangeValue}
                   min={6}
-                  max={36}
-                  step={1}
+                  max={72}
+                  step={3}
                   onValueChange={setWindowRangeValue}
                 />
               </div>
 
-              <span className="text-xs text-muted-foreground">36</span>
+              <span className="text-xs text-muted-foreground">72</span>
             </div>
           </div>
 
@@ -121,11 +164,31 @@ export default function LiveAnalysisKeyword() {
       <div className="my-5">
         {loading ? (
           <Loading text="Analyzing feeds, please wait..." />
-        ) : resultsAggregated ? (
+        ) : results.aggregated || results.headlines || results.sentimentChange ? (
           <>
+            <h1 className="text-2xl font-bold text-red-400">
+              {sentimentLabelMap[results.aggregated.summary.label]}
+            </h1>
+
+            <p className="text-muted-foreground">
+                {results.headlines.ai_summary}
+            </p>
+
+            <div></div>
             <h2 className="mb-4 text-xl font-semibold">Aggregated Results</h2>
             <div className="space-y-4">
-              <pre>{JSON.stringify(resultsAggregated, null, 2)}</pre>
+              <pre>{JSON.stringify(results.aggregated, null, 2)}</pre>
+            </div>
+
+            <div>
+              <h2 className="mb-4 mt-8 text-xl font-semibold">Headlines</h2>
+
+              <pre>{JSON.stringify(results.headlines, null, 2)}</pre>
+            </div>
+
+            <div>
+              <h2 className="mb-4 mt-8 text-xl font-semibold">Sentiment Change</h2>
+              <pre>{JSON.stringify(results.sentimentChange, null, 2)}</pre>
             </div>
           </>
         ) : null}
