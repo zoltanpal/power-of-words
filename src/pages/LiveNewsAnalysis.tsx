@@ -28,7 +28,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { TopFeeds } from "@/components/elements/TopFeeds";
+// import { TopFeeds } from "@/components/elements/TopFeeds";
 
 
 
@@ -39,7 +39,7 @@ function LiveAnalysisPageContent() {
   const { sourceOptions, effectiveSourceIds, loadingSources, error: sourceError } =
     useAnalysisSources();
   const { start } = useAnalysisJob();
-  const { items, feedItems, mostCommonWords, sentimentsCount, topPositiveFeeds, topNegativeFeeds, isReady } =
+  const { items, feedItems, mostCommonWords, sentimentsCount, isReady } =
     useAnalysisData();
 
   const [activeTab, setActiveTab] = useState<AnalysisTab>("overview");
@@ -334,7 +334,7 @@ function LiveAnalysisPageContent() {
                   <CardTitle className="text-2xl">Top 5 Positive Feeds</CardTitle>
                 </CardHeader>
                 <CardContent className="px-3 pt-0 -mt-5">
-                  <TopFeeds value={topPositiveFeeds} loading={false} />
+                  {/* <TopFeeds value={topPositiveFeeds} loading={false} /> */}
                 </CardContent>
               </Card>
               <Card>
@@ -342,7 +342,7 @@ function LiveAnalysisPageContent() {
                   <CardTitle className="text-2xl">Top 5 Negative Feeds</CardTitle>
                 </CardHeader>
                 <CardContent className="px-3 pt-0 -mt-5">
-                  <TopFeeds value={topNegativeFeeds} loading={false} />
+                  {/* <TopFeeds value={topNegativeFeeds} loading={false} /> */}
                 </CardContent>
               </Card>
 

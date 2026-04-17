@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPinXInside, SearchIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
