@@ -15,10 +15,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Debug env presence
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}"
+          [ -n "$VITE_API_HOST" ] && echo "VITE_API_HOST is set" || (echo "VITE_API_HOST is empty" && exit 1)
+          [ -n "$VITE_API_TOKEN" ] && echo "VITE_API_TOKEN is set" || (echo "VITE_API_TOKEN is empty" && exit 1)
+        env:
+          VITE_API_HOST: ${{ vars.VITE_API_HOST }}
+          VITE_API_TOKEN: ${{ secrets.VITE_API_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -34,10 +44,10 @@ jobs:
         env:
           VITE_API_HOST: ${{ vars.VITE_API_HOST }}
           VITE_API_HOST_SENTIMENT: ${{ vars.VITE_API_HOST_SENTIMENT }}
-          VITA_API_HOST_POW: ${{ vars.VITA_API_HOST_POW }}
+          VITE_API_HOST_POW: ${{ vars.VITE_API_HOST_POW }}
           VITE_DEV_API_HOST: ${{ vars.VITE_DEV_API_HOST }}
           VITE_DEV_SAPI_HOST: ${{ vars.VITE_DEV_SAPI_HOST }}
-          VITE_API_TOKEN: ${{ secrets.VITE_API_TOKEN }}
+          VITE_API_TOKEN: '${{ secrets.VITE_API_TOKEN }}'
           VITE_APP_VERSION: ${{ vars.VITE_APP_VERSION }}
           VITE_GA_MEASUREMENT_ID: ${{ secrets.VITE_GA_MEASUREMENT_ID }}
 
