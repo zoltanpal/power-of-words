@@ -3,7 +3,7 @@ name: Deploy React App to Server
 on:
   workflow_dispatch:
     inputs:
-      environment:
+      deployment_env:
         description: "Select environment to deploy"
         required: true
         default: "dev"
@@ -52,7 +52,7 @@ jobs:
       - name: Resolve deployment path
         id: vars
         run: |
-          if [ "${{ github.event.inputs.environment }}" = "prod" ]; then
+          if [ "${{ github.event.inputs.deployment_env }}" = "prod" ]; then
             echo "deploy_path=${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}" >> $GITHUB_OUTPUT
           else
             echo "deploy_path=${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}" >> $GITHUB_OUTPUT
