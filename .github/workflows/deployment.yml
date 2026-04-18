@@ -15,6 +15,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout repository
@@ -31,6 +32,15 @@ jobs:
 
       - name: Build app
         run: npm run build
+        env:
+          VITE_API_HOST: ${{ var.VITE_API_HOST }}
+          VITE_API_HOST_SENTIMENT: ${{ var.VITE_API_HOST_SENTIMENT }}
+          VITA_API_HOST_POW: ${{ var.VITA_API_HOST_POW }}
+          VITE_DEV_API_HOST: ${{ var.VITE_DEV_API_HOST }}
+          VITE_DEV_SAPI_HOST: ${{ var.VITE_DEV_SAPI_HOST }}
+          VITE_API_TOKEN: ${{ secrets.VITE_API_TOKEN }}
+          VITE_APP_VERSION: ${{ var.VITE_APP_VERSION }}
+          VITE_GA_MEASUREMENT_ID: ${{ secrets.VITE_GA_MEASUREMENT_ID }}
 
       - name: Resolve deployment path
         id: vars
