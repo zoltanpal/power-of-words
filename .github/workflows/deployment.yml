@@ -15,6 +15,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: power-of-words-react
 
     steps:
       - name: Checkout repository
