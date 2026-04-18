@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Select environment to deploy'
+        description: "Select environment to deploy"
         required: true
-        default: 'dev'
+        default: "dev"
         type: choice
         options:
           - dev
@@ -19,44 +19,55 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          clean: true
 
-      - name: Deploy to the Server (${{ github.event.inputs.environment }})
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Resolve deployment path
+        id: vars
+        run: |
+          if [ "${{ github.event.inputs.environment }}" = "prod" ]; then
+            echo "deploy_path=${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}" >> $GITHUB_OUTPUT
+          else
+            echo "deploy_path=${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Prepare target directory
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            set -e  # Stop on any error
+            set -e
+            mkdir -p "${{ steps.vars.outputs.deploy_path }}"
+            find "${{ steps.vars.outputs.deploy_path }}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 
-            ENV=${{ github.event.inputs.environment }}
+      - name: Upload dist folder
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "dist/*"
+          target: "${{ steps.vars.outputs.deploy_path }}"
+          strip_components: 1
 
-            if [ "$ENV" == "prod" ]; then
-              echo "Deploying to production..."
-              WORK_DIR=${{ secrets.PROD_SERVER_DEPLOYMENT_PATH }}
-            else
-              echo "Deploying to development..."
-              WORK_DIR=${{ secrets.DEV_SERVER_DEPLOYMENT_PATH }}
-            fi
-
-            echo "Working directory: $WORK_DIR"
-            cd "$WORK_DIR"
-
-            # Fetch and reset to remote branch
-            git fetch origin
-
-            # Discard all local changes but keep .env
-            git reset --hard origin/${{ github.ref_name }}
-            git clean -fdx -e .env
-
-            # Make sure we are on the right branch
-            git checkout -B ${{ github.ref_name }} origin/${{ github.ref_name }}
-
-            # Set up Node.js environment (adjust path if needed)
-            export PATH=$HOME/.nvm/versions/node/v18.17.1/bin:$PATH
-
-            # Install dependencies and build
-            npm ci
-            npm run build
+      - name: Set permissions
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            set -e
+            chmod -R 755 "${{ steps.vars.outputs.deploy_path }}"
